@@ -68,6 +68,31 @@ ctx = Dubstep.LPCtx(metadata=Dict(1=>2, 2=>1, Inf=>1))
 And just like that, we can control the execution
 of a program without rewriting it at the lexical level.
 
+## TypeCtx
+This context is called internally by our `typegraph()` function which will return a `MetaDiGraph` for every script describing the interactions and transformations from the arguments to the outputs. Don't worry about the jargon the example below explains this in more layman's terms!
+
+Consider a script that has the form `b = foo(a)` in our graph this would be represented as an edge pointing from `typeof(a)`$\longrightarrow$`typeof(b)` with an edge label of `foo`.
+
+
+```
+module example
+
+foo(a)
+	return a + 1
+end
+
+bar(b)
+	return convert(String,b)
+end
+
+main()
+	x = foo(3)
+	bar(x)
+end
+
+end # module
+```
+`typegraph` has an optional parameter to specify the recursion depth and how deep down the stack trace the program should go.
 
 ## Transformations
 
@@ -368,9 +393,6 @@ end
 It works! We can see that increasing the population growth causes a larger infected and recovered population at the end
 of 1 year.
 
-## TypeCtx
-
-Builds a type graph based on the scripts that are fed into the 
 
 ## Reference
 
