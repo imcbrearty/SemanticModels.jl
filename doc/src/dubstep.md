@@ -368,6 +368,10 @@ end
 It works! We can see that increasing the population growth causes a larger infected and recovered population at the end
 of 1 year.
 
+## TypeCtx
+
+Builds a type graph based on the scripts that are fed into the 
+
 ## Reference
 
 

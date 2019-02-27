@@ -228,7 +228,7 @@ function buildgraph(g,collector)
         nothing
     end
     try
-        add_edge!(g,nv(g)-1,nv(g),:name,collector.frame.func)
+        add_edge!(g,g[collector.frame.args,:name],g[collector.frame.ret,:name],:name,collector.frame.func)
     catch
         nothing
     end
