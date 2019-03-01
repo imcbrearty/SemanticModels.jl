@@ -2,8 +2,10 @@ module Dubstep
 
 using Cassette
 using LinearAlgebra
+using LightGraphs
+using MetaGraphs
 export construct, TracedRun, trace, TraceCtx, LPCtx, replacenorm,
-    GraftCtx, replacefunc
+    GraftCtx, replacefunc, TypeCtx, typegraph
 
 function construct(T::Type, args...)
     @info "constructing a model $T"
