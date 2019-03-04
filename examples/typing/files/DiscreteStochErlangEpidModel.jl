@@ -14,6 +14,7 @@
 # ---
 
 # # Load Packages for Julia
+module Example
 
 using DataFrames
 using Distributions
@@ -206,4 +207,6 @@ function main()
         println("    Test FAILED")    
     end
     println("-------------------\n")
+end
+    
 end

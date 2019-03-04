@@ -12,6 +12,8 @@
 #     name: julia-1.0
 # ---
 
+module Example
+
 using DifferentialEquations
 
 function main()
@@ -40,5 +42,7 @@ tspan=tspan = (0.0,15.0)
 
 sis_prob = ODEProblem(sis_ode,init,tspan,parms)
 sis_sol = solve(sis_prob,saveat=0.1);
+
+end
 
 end

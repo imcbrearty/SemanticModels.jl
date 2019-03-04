@@ -13,6 +13,8 @@
 #     name: julia-1.0
 # ---
 
+module Example
+
 using Random
 using DifferentialEquations
 
@@ -98,5 +100,6 @@ spsir_logbm_drift_sol = solve(spsir_logbm_drift_prob)
 
 end
 
+end
 
 

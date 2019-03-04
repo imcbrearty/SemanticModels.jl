@@ -12,6 +12,7 @@
 #     language: julia
 #     name: julia-1.0
 # ---
+module Example
 
 using DifferentialEquations
 using Random
@@ -73,4 +74,4 @@ function main()
 
 end
 
-
+end 

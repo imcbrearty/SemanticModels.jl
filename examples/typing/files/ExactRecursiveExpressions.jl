@@ -12,8 +12,7 @@
 #     language: julia
 #     name: julia-1.0
 # ---
-
-using Plots
+module Example
 
 function main()
 
@@ -101,3 +100,4 @@ bar(0:N,final_size)
 
 end
 
+end

@@ -48,6 +48,8 @@
 # β: the infection rate (units: per capita per time)
 
 # +
+module Example
+
 using DifferentialEquations
 using IterableTables, DataFrames
 
@@ -103,5 +105,7 @@ df.t = collect(range(0,stop = 365,length = 365*10+1));
 # -
 
 first(df,10)
+
+end
 
 end

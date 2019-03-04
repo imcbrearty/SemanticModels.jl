@@ -13,6 +13,8 @@
 #     name: julia-1.0
 # ---
 
+module Example
+
 using RandomNumbers
 using DataFrames
 
@@ -75,7 +77,4 @@ else
     first(sir_out,size(sir_out)[1]) 
 end
 
-using Plots
-using StatPlots
-
-@df sir_out plot(:Time, [:S :I :R], colour = [:red :green :blue], xlabel="Time",ylabel="Number")
+end

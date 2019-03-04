@@ -13,7 +13,7 @@
 #     name: julia-1.0
 # ---
 
-using Plots
+module Example
 
 function main()
 #Get Final Size for SIR Model
@@ -97,5 +97,7 @@ final_size = getSI4R_final_size(N,β,γ);
 @time final_size = getSI4R_final_size(N,β,γ);
 
 bar(0:N,final_size)
+
+end
 
 end

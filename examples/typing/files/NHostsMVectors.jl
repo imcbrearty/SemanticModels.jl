@@ -71,6 +71,8 @@
 
 # +
 
+module Example
+
 using DifferentialEquations
 using IterableTables, DataFrames
 using Random
@@ -184,21 +186,6 @@ prob = ODEProblem(F, u0, tspan, p)
 sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8,saveat=range(0,365,length= 365*10+1));
 # -
 
-df = DataFrame(sol)
-namespace = zip(names(df)[2:end],[
-    :S_H1,:E_H1,:I_H1,:R_H1,
-    :S_H2,:E_H2,:I_H2,:R_H2,
-    :S_V1,:E_V1,:I_V1,
-    :S_V2,:E_V2,:I_V2])
-namespace = collect(namespace)
-rename!(df,namespace);
+end
 
-using Plots
-host_1 = plot(df[:timestamp],[df[:,:S_H1],df[:,:E_H1],df[:,:I_H1],df[:,:R_H1]])
-host_2 = plot(df[:timestamp],[df[:,:S_H2],df[:,:E_H2],df[:,:I_H2],df[:,:R_H2]])
-plot(host_1,host_2,layout=(2,1))
-
-virus_1 = plot(df[:timestamp],[df[:,:S_V1],df[:,:E_V1],df[:,:I_V1]])
-virus_2 = plot(df[:timestamp],[df[:,:S_V2],df[:,:E_V2],df[:,:I_V2]])
-plot(virus_1,virus_2,layout=(2,1))
 end

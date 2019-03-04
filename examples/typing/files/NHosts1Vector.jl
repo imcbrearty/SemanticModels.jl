@@ -72,11 +72,14 @@
 # With this approach, we can re-use the solution for one host, with slight modifications:
 
 # +
+module Example
+
 using DifferentialEquations
 using IterableTables, DataFrames
 using Random
 
 function main()
+
 H_comps = 4
 V_comps = 3
 
@@ -167,23 +170,7 @@ p = (
 tspan = (0.0, 365.0)
 prob = ODEProblem(F, u0, tspan, p)
 sol = solve(prob,Tsit5(),reltol=1e-8,abstol=1e-8,saveat=collect(range(0,stop = 365,length = 365*10+1)));
-# -
 
-df = DataFrame(sol)
-namespace = zip(names(df)[2:end],[
-    :S_H1,:E_H1,:I_H1,:R_H1,
-    :S_H2,:E_H2,:I_H2,:R_H2,
-    :S_H3,:E_H3,:I_H3,:R_H3,
-    :S_H4,:E_H4,:I_H4,:R_H4,
-    :S_H5,:E_H5,:I_H5,:R_H5,
-    :S_V,:E_V,:I_V])
-namespace = collect(namespace)
-rename!(df,namespace);
+end
 
-using Plots
-host_1 = plot(df[:timestamp],[df[:,:S_H1],df[:,:E_H1],df[:,:I_H1],df[:,:R_H1]])
-host_2 = plot(df[:timestamp],[df[:,:S_H2],df[:,:E_H2],df[:,:I_H2],df[:,:R_H2]])
-host_3 = plot(df[:timestamp],[df[:,:S_H3],df[:,:E_H3],df[:,:I_H3],df[:,:R_H3]])
-host_4 = plot(df[:timestamp],[df[:,:S_H4],df[:,:E_H4],df[:,:I_H4],df[:,:R_H4]])
-plot(host_1,host_2,host_3,host_4,layout=(4,1),label=["S","E","I","R"])
 end

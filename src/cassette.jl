@@ -208,7 +208,6 @@ end
 
 Cassette.canrecurse(ctx::TypeCtx,::typeof(Base.vect), args...) = false # limit the stacktrace in terms of which to recurse on
 Cassette.canrecurse(ctx::TypeCtx,::typeof(FCollector)) = false
-Cassette.canrecurse(ctx::TypeCtx,::typeof(Frame)) = false
      
 """    buildgraph
 
@@ -218,25 +217,48 @@ takes the collector object and returns a metagraph
 """
 function buildgraph(g,collector)
     try
-        add_vertex!(g,:name,collector.frame.args)
+        g[collector.frame.args,:label]
     catch
-        nothing
+        add_vertex!(g,:label,collector.frame.args)
     end
-    try
-        add_vertex!(g,:name,collector.frame.ret)
+
+    try 
+        g[collector.frame.ret,:label]
     catch
-        nothing
+        add_vertex!(g,:label,collector.frame.ret)
     end
-    try
-        add_edge!(g,g[collector.frame.args,:name],g[collector.frame.ret,:name],:name,collector.frame.func)
-    catch
-        nothing
+    
+    if !has_edge(g,g[collector.frame.args,:label],g[collector.frame.ret,:label])    
+        add_edge!(g,g[collector.frame.args,:label],g[collector.frame.ret,:label],:label,collector.frame.func)
     end
+                    
     for frame in collector.data
         buildgraph(g,frame)
     end
+                    
     return g
 end
+
+"""    cleangraph(g::MetaDiGraph)
+
+removes the nothings to replace them with strings for outputing an image
+"""
+function clearngraph(mg::MetaDiGraph)
+    for vertex in vertices(mg)
+        if get_prop(mg,vertex,:name) == nothing
+            set_prop!(mg,vertex,:name,"missing")
+        end
+    end
+    
+    for edge in edges(mg)
+        if get_prop(mg,edge,:name) == nothing
+            set_prop!(mg,edge,:name,"missing")
+        end
+    end
+    
+    return g
+end
+                            
 
 """    typegraph(path::AbstractString,maxdepth::Int)
             
@@ -250,10 +272,12 @@ function typegraph(m::Module,maxdepth::Int=3)
     ctx = TypeCtx(metadata = extractor);     # init the context we want             
     Cassette.overdub(ctx,m.main);    # run the script internally and build the extractor data structure
     g = MetaDiGraph()    # crete a graph where we will init our tree
-    set_indexing_prop!(g,:name)    # we want to set this metagraph to be able to index by the names
-    return buildgraph(g,extractor)    # pass the collector ds to make the acutal metagraph
+    set_indexing_prop!(g,:label)    # we want to set this metagraph to be able to index by the names
+    g = buildgraph(g,extractor)    # pass the collector ds to make the acutal metagraph
+    return cleangraph(g)
     
 end
+                        
 
 end #module
 

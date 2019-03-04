@@ -12,6 +12,8 @@
 #     name: julia-1.0
 # ---
 
+module Example
+
 using DifferentialEquations
 using LinearAlgebra
 using Plots
@@ -153,5 +155,7 @@ step(-0.5:1:10.5,[yprop[:,length(sol.t)];0])
 # Prepare the plots
 x = find(infProp.==maximum(infProp))
 step(-0.5:1:10.5,[yprop[:,x];0]);
+
+end
 
 end

@@ -12,6 +12,7 @@
 #     language: julia
 #     name: julia-1.0
 # ---
+module Example
 
 using DifferentialEquations
 
@@ -62,7 +63,6 @@ macro_odeProblem = ODEProblem(macroParasiteModelFunction,init,tspan,par)
 sol=solve(macro_odeProblem);
 
 
-plot(sol,xlabel="Time",yscale=:log10)
-
+end
 
 end

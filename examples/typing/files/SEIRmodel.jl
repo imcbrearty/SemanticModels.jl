@@ -13,6 +13,8 @@
 #     name: julia-1.0
 # ---
 
+module Example
+
 using DifferentialEquations
 
 function main()
@@ -54,4 +56,4 @@ sol=solve(seir_prob);
 
 end
 
-
+end

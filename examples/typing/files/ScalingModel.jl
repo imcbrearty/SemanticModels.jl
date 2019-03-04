@@ -13,6 +13,8 @@
 #     name: julia-1.0
 # ---
 
+module Example
+
 using DifferentialEquations
 
 function main()
@@ -51,5 +53,7 @@ tspan = (0.0,10.0);
 sir_prob = ODEProblem(micro_1,init,tspan,parms)
 
 sir_sol = solve(sir_prob);
+
+end
 
 end
