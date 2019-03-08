@@ -18,8 +18,6 @@ module Example
 
 using DataFrames
 using Distributions
-using Plots
-
 # # Calculate Discrete Erlang Probabilities
 #
 # The following function is to calculate the discrete truncated Erlang probability, given k and γ:
@@ -181,13 +179,6 @@ function main()
                             "beta" => 0.25),
                        300 )
     print(sim[end - 9 : end, :])
-
-    gr(fmt = :png)
-    plot( sim[:, :time],
-           [sim[:, :S], sim[:, :E], sim[:, :I], sim[:, :R]],
-           label = ["Susceptible", "Exposed", "Infectious", "Recovered"],
-           xlabel = "Time", ylabel = "Number of Individuals",
-           linealpha = 0.5, linewidth = 3 )
     Random.seed!(12345)
     test_sim = seir_simulation( Dict("S" => 9999, "E" => 1, "I" => 0, "R" => 0),
                                 Dict("k_E" =>  5, "gamma_E" => 1.0,
@@ -195,18 +186,6 @@ function main()
                                      "beta" => 0.25),
                                 100 )
     test_result = convert(Matrix, test_sim[end-2 : end, :])
-
-    correct_result = [ 6416  1017  1298  1269   98 ;
-                       6210  1045  1379  1366   99 ;
-                       6010  1086  1442  1462  100 ]
-
-    println("\n-------------------")
-    if correct_result == test_result
-        println("    Test PASSED")    
-    else
-        println("    Test FAILED")    
-    end
-    println("-------------------\n")
 end
     
 end

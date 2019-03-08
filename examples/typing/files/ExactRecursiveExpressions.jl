@@ -12,10 +12,10 @@
 #     language: julia
 #     name: julia-1.0
 # ---
+
 module Example
 
 function main()
-
 #Get Final Size for SIR Model
 @fastmath function getSIR_final_size(N,β,γ)
     final_size = zeros(N+1,1);
@@ -42,8 +42,6 @@ final_size = getSIR_final_size(N,β,γ);
 
 #Get Time Final Size Function
 @time final_size = getSIR_final_size(N,β,γ);
-
-bar(0:N,final_size)
 
 @fastmath function getSI4R_final_size(N::Int64,β::Float64,γ::Float64)
     Psi = (N+1)*(N+2)*(N+3)*(N+4)/24;
@@ -95,8 +93,6 @@ final_size = getSI4R_final_size(N,β,γ);
 
 #Get Run time of SI(4)R Final Size Model
 @time final_size = getSI4R_final_size(N,β,γ);
-
-bar(0:N,final_size)
 
 end
 

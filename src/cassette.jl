@@ -192,7 +192,7 @@ mutable struct Frame{F,T,U}
 end
             
 function Cassette.overdub(ctx::TypeCtx, f, args...) # add boilerplate for functionality
-    c = FCollector(ctx.metadata.depth-1, Frame(f, args, Any))
+    c = FCollector(ctx.metadata.depth-1, Frame(f, typeof.(args), Any))
     push!(ctx.metadata.data, c)
     if c.depth > 0 && Cassette.canrecurse(ctx, f, args...)
         newctx = Cassette.similarcontext(ctx, metadata = c)
@@ -206,9 +206,20 @@ function Cassette.overdub(ctx::TypeCtx, f, args...) # add boilerplate for functi
     end
 end
 
-Cassette.canrecurse(ctx::TypeCtx,::typeof(Base.vect), args...) = false # limit the stacktrace in terms of which to recurse on
-Cassette.canrecurse(ctx::TypeCtx,::typeof(FCollector)) = false
-     
+Cassette.canrecurse(ctx::Type{TypeCtx},::typeof(Base.vect), args...) = false # limit the stacktrace in terms of which to recurse on
+Cassette.canrecurse(ctx::Type{TypeCtx},::typeof(FCollector)) = false
+function Cassette.canrecurse(ctx::TypeCtx,
+                             f::Union{typeof(+), typeof(*), typeof(/), typeof(-),typeof(Base.iterate),
+                                      typeof(Base.sum),
+                                      typeof(Base.mapreduce),
+                                      typeof(Base.Broadcast.copy),
+                                      typeof(Base.Broadcast.instantiate),
+                                      typeof(Base.Math.throw_complex_domainerror),
+                                      typeof(Base.Broadcast.broadcasted)},
+                             args...)
+    return false
+end
+                
 """    buildgraph
 
 internal function used in the typegraphfrompath
@@ -243,20 +254,20 @@ end
 
 removes the nothings to replace them with strings for outputing an image
 """
-function clearngraph(mg::MetaDiGraph)
+function cleangraph(mg::MetaDiGraph)
     for vertex in vertices(mg)
-        if get_prop(mg,vertex,:name) == nothing
-            set_prop!(mg,vertex,:name,"missing")
+        if get_prop(mg,vertex,:label) == nothing
+            set_prop!(mg,vertex,:label,"missing")
         end
     end
     
     for edge in edges(mg)
-        if get_prop(mg,edge,:name) == nothing
-            set_prop!(mg,edge,:name,"missing")
+        if get_prop(mg,edge,:label) == nothing
+            set_prop!(mg,edge,:label,"missing")
         end
     end
     
-    return g
+    return mg
 end
                             
 
@@ -278,6 +289,5 @@ function typegraph(m::Module,maxdepth::Int=3)
     
 end
                         
-
 end #module
 

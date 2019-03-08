@@ -18,6 +18,8 @@ module Example
 using RandomNumbers
 using DataFrames
 
+function main()
+
 @inline @fastmath function randbn(n,p,rng)
     q = 1.0 - p
     s = p/q
@@ -75,6 +77,8 @@ if(size(sir_out)[1] >= 6)
     first(sir_out,6)
 else
     first(sir_out,size(sir_out)[1]) 
+end
+
 end
 
 end

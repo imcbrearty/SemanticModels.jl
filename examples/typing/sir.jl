@@ -1,4 +1,9 @@
 module test
+
+using DifferentialEquations
+
+function main()
+    
 function sir_ode(du, u, p, t)  
     #Infected per-Capita Rate
     β = p[1]
@@ -14,10 +19,7 @@ function sir_ode(du, u, p, t)
     du[2] = β * S * I - γ * I
     du[3] = γ * I
 end
-
-using DifferentialEquations
-
-function main()
+    
 #Pram = (Infected Per Capita Rate, Recover Per Capita Rate)
 pram = [0.1,0.05]
 #Initial Prams = (Susceptible Individuals, Infected by Infected Individuals)
