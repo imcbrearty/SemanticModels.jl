@@ -179,7 +179,7 @@ function FCollector(d::Int, f)
     FCollector(d, f, FCollector[])
 end
 
-""" Frame(func, args, ret, subtrace)
+"""    Frame(func, args, ret)
 
 a structure to hold metadata for recursive type information for each function call
 Every frame can be thought of as a single stack frame when a function is called
@@ -188,20 +188,29 @@ Every frame can be thought of as a single stack frame when a function is called
 mutable struct Frame{F,T,U}
     func::F
     args::T
-    ret::U
+    ret::Set{U}
 end
+    
+"""    memo_dict((func,typeof.(args))=>ret)   
+
+A dictionary that we use to memoize the edge list as we go to save space in the overall collection.
+
+"""
+memo_dict = Dict()
             
 function Cassette.overdub(ctx::TypeCtx, f, args...) # add boilerplate for functionality
-    c = FCollector(ctx.metadata.depth-1, Frame(f, typeof.(args), Any))
-    push!(ctx.metadata.data, c)
+    c = FCollector(ctx.metadata.depth-1, Frame(f, typeof.(args), Set()) )
+    if !haskey(memo_dict,(f,typeof.(args)))
+        push!(ctx.metadata.data, c)
+    end
     if c.depth > 0 && Cassette.canrecurse(ctx, f, args...)
         newctx = Cassette.similarcontext(ctx, metadata = c)
         z = Cassette.recurse(newctx, f, args...)
-        c.frame.ret = typeof(z)
+        push!(c.frame.ret, typeof(z))
         return z
     else
         z = Cassette.fallback(ctx, f, args...)
-        c.frame.ret = typeof(z)
+        push!(c.frame.ret, typeof(z))
         return z
     end
 end
@@ -232,16 +241,20 @@ function buildgraph(g,collector)
     catch
         add_vertex!(g,:label,collector.frame.args)
     end
-
-    try 
-        g[collector.frame.ret,:label]
-    catch
-        add_vertex!(g,:label,collector.frame.ret)
+            
+    for ret_type in collector.frame.ret
+        try 
+            g[ret_type,:label]
+        catch
+            add_vertex!(g,:label,ret_type)
+        end
+                    
+        if !has_edge(g,g[collector.frame.args,:label],g[ret_type,:label])    
+            add_edge!(g,g[collector.frame.args,:label],g[ret_type,:label],:label,collector.frame.func)
+        end
     end
     
-    if !has_edge(g,g[collector.frame.args,:label],g[collector.frame.ret,:label])    
-        add_edge!(g,g[collector.frame.args,:label],g[collector.frame.ret,:label],:label,collector.frame.func)
-    end
+
                     
     for frame in collector.data
         buildgraph(g,frame)
@@ -250,11 +263,11 @@ function buildgraph(g,collector)
     return g
 end
 
-"""    cleangraph(g::MetaDiGraph)
+"""    cleangraph!(g::MetaDiGraph)
 
 removes the nothings to replace them with strings for outputing an image
 """
-function cleangraph(mg::MetaDiGraph)
+function cleangraph!(mg::MetaDiGraph)
     for vertex in vertices(mg)
         if get_prop(mg,vertex,:label) == nothing
             set_prop!(mg,vertex,:label,"missing")
@@ -279,13 +292,13 @@ takes in optional parameter of recursion depth on the stacktrace defaulted to 3
 """
 function typegraph(m::Module,maxdepth::Int=3)
     
-    extractor = FCollector(maxdepth, Frame(nothing, (), nothing,)) # init the collector object     
+    extractor = FCollector(maxdepth, Frame(nothing, (), Set())) # init the collector object     
     ctx = TypeCtx(metadata = extractor);     # init the context we want             
     Cassette.overdub(ctx,m.main);    # run the script internally and build the extractor data structure
     g = MetaDiGraph()    # crete a graph where we will init our tree
     set_indexing_prop!(g,:label)    # we want to set this metagraph to be able to index by the names
     g = buildgraph(g,extractor)    # pass the collector ds to make the acutal metagraph
-    return cleangraph(g)
+    return cleangraph!(g)
     
 end
                         
