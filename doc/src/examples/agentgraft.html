@@ -1,0 +1,116 @@
+<h1 id="coding-utf-8---">-<em>- coding: utf-8 -</em>-</h1>
+<h1 id="agent-based-simulation-augmentation">Agent Based Simulation Augmentation</h1>
+<p>We can apply our model augmentation framework to models that are not defined as an analytical mathematical expression. A widely used class of models for complex systems are <em>agent based</em> in that they have an explicit representation of the agents with states and functions to represent their behavior and interactions. This notebook examines how to apply model transformations to augment agent based simulations.</p>
+<p>We are going to use the simulation in <code>examples/agentbased.jl</code> as a baseline simulation and add capabilities to the simulation with SemanticModels transformations. The simulation in question is an implementation of a basic SIRS model on a static population. We will make two augmentations.</p>
+<ol type="1">
+<li>Add <em>un estado de los muertos</em> or <em>a state for the dead</em>, transforming the model from SIRS to SIRD</li>
+<li>Add <em>vital dynamics</em> a represented by net population growth</li>
+</ol>
+<p>These changes to the model could easily be made by changing the source code to add the features. However, this notebook shows how those changes could be scripted by a scientist. As we all know, once you can automate a scientific task by introducing a new technology, you free the mind of the scientist for more productive thoughts.</p>
+<p>In this case we are automating the implementation of model changes to free the scientist to think about <em>what augmentations to the model should I make?</em> instead of <em>how do I implement these augmentations?</em></p>
+<pre class="sourceCode julia" id="cb1"><code class="sourceCode julia"><a class="sourceLine" id="cb1-1" data-line-number="1">using SemanticModels.Parsers</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">using SemanticModels.ModelTools</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">import</span> Base: push!</a></code></pre>
+<pre class="sourceCode julia" id="cb2"><code class="sourceCode julia"><a class="sourceLine" id="cb2-1" data-line-number="1">samples = <span class="fl">7</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">nsteps = <span class="fl">10</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">finalcounts = <span class="dt">Any</span>[]</a></code></pre>
+<pre class="sourceCode julia" id="cb3"><code class="sourceCode julia"><a class="sourceLine" id="cb3-1" data-line-number="1">println(<span class="st">&quot;Running Agent Based Simulation Augmentation Demo&quot;</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">println(<span class="st">&quot;================================================&quot;</span>)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">println(<span class="st">&quot;demo parameters:</span><span class="sc">\n\t</span><span class="st">samples=$samples</span><span class="sc">\n\t</span><span class="st">nsteps=$nsteps&quot;</span>)</a></code></pre>
+<h2 id="baseline-sirs-model">Baseline SIRS model</h2>
+<p>Here is the baseline model, which is read in from a text file. You could instead of using <code>parsefile</code> use a <code>quote/end</code> block to code up the baseline model in this script.</p>
+<p><img src="https://docs.google.com/drawings/d/e/2PACX-1vSeA7mAQ-795lLVxCWXzbkFQaFOHMpwtB121psFV_2cSUyXPyKMtvDjssia82JvQRXS08p6FAMr1hj1/pub?w=1031&amp;h=309"></p>
+<pre class="sourceCode julia" id="cb4"><code class="sourceCode julia"><a class="sourceLine" id="cb4-1" data-line-number="1">expr = parsefile(<span class="st">&quot;../examples/agentbased.jl&quot;</span>)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">m = model(ExpStateModel, expr.args[<span class="fl">3</span>].args[<span class="fl">3</span>])</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">println(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Running basic model&quot;</span>)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">AgentModels = eval(m.expr)</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="kw">for</span> i <span class="kw">in</span> <span class="fl">1</span>:samples</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">    newsam, counts = AgentModels.main(nsteps)</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">    push!(finalcounts, (model=:basic, counts=counts))</a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="kw">end</span></a></code></pre>
+<pre class="sourceCode julia" id="cb5"><code class="sourceCode julia"><a class="sourceLine" id="cb5-1" data-line-number="1">m</a></code></pre>
+<h2 id="adding-the-dead-state">Adding the Dead State</h2>
+<p><img src="https://docs.google.com/drawings/d/e/2PACX-1vRUhrX6GzMzNRWr0GI3pDp9DvSqJVTDVpy9SNNBIB08b7Hyf9vaHobE2knrGPda4My9f_o9gncG34pF/pub?w=1028&amp;h=309"></p>
+<p>We are going to add an additional state to the model to represent the infectious disease fatalities. The user must specify what that concept means in terms of the name for the new state and the behavior of that state. <code>D</code> is a terminal state for a finite automata.</p>
+<pre class="sourceCode julia" id="cb6"><code class="sourceCode julia"><a class="sourceLine" id="cb6-1" data-line-number="1">println(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">The system states are $(m.states.args)&quot;</span>)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">println(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Adding un estado de los muertos&quot;</span>)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">put!(m, ExpStateTransition(:D, :((x...)-&gt;:D)))</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">println(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">The system states are $(m.states.args)&quot;</span>)</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co"># once you are dead, you are dead forever</span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">println(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">There is no resurrection in this model&quot;</span>)</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">println(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Infected individuals recover or die in one step&quot;</span>)</a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co"># replace!(m, ExpStateTransition(:I, :((x...)-&gt;rand(Bool) ? :D : :I)))</span></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12">m[:I] = :((x...)-&gt;rand(<span class="dt">Bool</span>) ? :R : :D)</a>
+<a class="sourceLine" id="cb6-13" data-line-number="13">@show m[:I]</a></code></pre>
+<pre class="sourceCode julia" id="cb7"><code class="sourceCode julia"><a class="sourceLine" id="cb7-1" data-line-number="1">println(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Running SIRD model&quot;</span>)</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">AgentModels = eval(m.expr)</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw">for</span> i <span class="kw">in</span> <span class="fl">1</span>:samples</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">    newsam, counts = AgentModels.main(nsteps)</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">    push!(finalcounts, (model=:sird, counts=counts))</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="kw">end</span></a></code></pre>
+<p>Some utilities for manipulating functions at a higher level than expressions.</p>
+<pre class="sourceCode julia" id="cb8"><code class="sourceCode julia"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">function</span> bodyblock(expr::<span class="dt">Expr</span>)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">    expr.head == :<span class="kw">function</span> || error(<span class="st">&quot;$expr is not a function definition&quot;</span>)</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">    <span class="kw">return</span> expr.args[<span class="fl">2</span>].args</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="kw">end</span></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">struct Func <span class="kw">end</span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="kw">function</span> push!(::Func, func::<span class="dt">Expr</span>, ex::<span class="dt">Expr</span>)</a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">    push!(bodyblock(func), ex)</a>
+<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="kw">end</span></a></code></pre>
+<h2 id="population-growth">Population Growth</h2>
+<p>Another change we can make to our model is the introduction of population growth. Our model for population is that on each timestep, one new suceptible person will be added to the list of agents. We use the <code>tick!</code> function as an anchor point for this transformation.</p>
+<p><img src="https://docs.google.com/drawings/d/e/2PACX-1vRfLcbPPaQq6jmxheWApqidYte8FxK7p0Ebs2EyW2pY3ougNh5YiMjA0NbRMuGAIT5pD02WNEoOfdCd/pub?w=1005&amp;h=247"></p>
+<pre class="sourceCode julia" id="cb9"><code class="sourceCode julia"><a class="sourceLine" id="cb9-1" data-line-number="1">println(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Adding population growth to this model&quot;</span>)</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">stepr = filter(x-&gt;isa(x,<span class="dt">Expr</span>), findfunc(m.expr, :tick!))[<span class="fl">1</span>]</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">@show stepr</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">push!(Func(), stepr, :(push!(sm.agents, :S)))</a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">println(<span class="st">&quot;------------------------&quot;</span>)</a>
+<a class="sourceLine" id="cb9-6" data-line-number="6">@show stepr;</a></code></pre>
+<pre class="sourceCode julia" id="cb10"><code class="sourceCode julia"><a class="sourceLine" id="cb10-1" data-line-number="1">println(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Running growth model&quot;</span>)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">AgentModels = eval(m.expr)</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw">for</span> i <span class="kw">in</span> <span class="fl">1</span>:samples</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">    newsam, counts = AgentModels.main(nsteps)</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">    push!(finalcounts, (model=:growth, counts=counts))</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="kw">end</span></a></code></pre>
+<h2 id="presentation-of-results">Presentation of results</h2>
+<p>We have accumulated all of our simulation runs into the list <code>finalcounts</code> we process those simulation runs into summary tables describing the results of those simulations. This table can be used to make decisions and drive further inquiry.</p>
+<pre class="sourceCode julia" id="cb11"><code class="sourceCode julia"><a class="sourceLine" id="cb11-1" data-line-number="1">println(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Model</span><span class="sc">\t</span><span class="st"> Counts&quot;</span>)</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">println(<span class="st">&quot;-----</span><span class="sc">\t</span><span class="st"> ------&quot;</span>)</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="kw">for</span> result <span class="kw">in</span> finalcounts</a>
+<a class="sourceLine" id="cb11-4" data-line-number="4">    println(<span class="st">&quot;$(result.model)</span><span class="sc">\t</span><span class="st">$(result.counts)&quot;</span>)</a>
+<a class="sourceLine" id="cb11-5" data-line-number="5"><span class="kw">end</span></a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="kw">function</span> groupagg(x::<span class="dt">Vector</span>{<span class="dt">Tuple</span>{S,T}}) where {S,T}</a>
+<a class="sourceLine" id="cb11-8" data-line-number="8">    c = <span class="dt">Dict</span>{S, <span class="dt">Tuple</span>{<span class="dt">Int</span>, T}}()</a>
+<a class="sourceLine" id="cb11-9" data-line-number="9">    <span class="co"># c2 = Dict{S, T}()</span></a>
+<a class="sourceLine" id="cb11-10" data-line-number="10">    <span class="kw">for</span> r <span class="kw">in</span> x</a>
+<a class="sourceLine" id="cb11-11" data-line-number="11">        g = first(r)</a>
+<a class="sourceLine" id="cb11-12" data-line-number="12">        c[g] = get(c, g,(<span class="fl">0</span>, <span class="fl">0.0</span>)) .+ (<span class="fl">1</span>, last(r))</a>
+<a class="sourceLine" id="cb11-13" data-line-number="13">    <span class="kw">end</span></a>
+<a class="sourceLine" id="cb11-14" data-line-number="14">    <span class="kw">return</span> c</a>
+<a class="sourceLine" id="cb11-15" data-line-number="15"><span class="kw">end</span></a>
+<a class="sourceLine" id="cb11-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb11-17" data-line-number="17">mean_healthy_frac = [(r.model,</a>
+<a class="sourceLine" id="cb11-18" data-line-number="18">                  map(last, filter(x-&gt;(x.first == :R || x.first == :S), r.counts))[<span class="fl">1</span>] / sum(map(last, r.counts))[<span class="fl">1</span>])</a>
+<a class="sourceLine" id="cb11-19" data-line-number="19">                 <span class="kw">for</span> r <span class="kw">in</span> finalcounts] |&gt; groupagg</a>
+<a class="sourceLine" id="cb11-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb11-21" data-line-number="21">num_unhealthy = [(r.model,</a>
+<a class="sourceLine" id="cb11-22" data-line-number="22">                  map(last,</a>
+<a class="sourceLine" id="cb11-23" data-line-number="23">                      sum(map(last, filter(x-&gt;(x.first != :R &amp;&amp; x.first != :S),</a>
+<a class="sourceLine" id="cb11-24" data-line-number="24">                             r.counts)))))</a>
+<a class="sourceLine" id="cb11-25" data-line-number="25">                 <span class="kw">for</span> r <span class="kw">in</span> finalcounts] |&gt; groupagg</a>
+<a class="sourceLine" id="cb11-26" data-line-number="26"></a>
+<a class="sourceLine" id="cb11-27" data-line-number="27">println(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Model</span><span class="sc">\t</span><span class="st"> Count </span><span class="sc">\t</span><span class="st"> Num Unhealthy </span><span class="sc">\t</span><span class="st"> Mean Healthy %&quot;</span>)</a>
+<a class="sourceLine" id="cb11-28" data-line-number="28">println(<span class="st">&quot;-----</span><span class="sc">\t</span><span class="st"> ------</span><span class="sc">\t</span><span class="st"> --------------</span><span class="sc">\t</span><span class="st">  --------------&quot;</span>)</a>
+<a class="sourceLine" id="cb11-29" data-line-number="29"><span class="kw">for</span> (g, v) <span class="kw">in</span> mean_healthy_frac</a>
+<a class="sourceLine" id="cb11-30" data-line-number="30">    μ = last(v)/first(v)</a>
+<a class="sourceLine" id="cb11-31" data-line-number="31">    μ′ = round(μ*<span class="fl">100</span>, sigdigits=<span class="fl">5</span>)</a>
+<a class="sourceLine" id="cb11-32" data-line-number="32">    x = round(last(num_unhealthy[g]) / first(num_unhealthy[g]), sigdigits=<span class="fl">5</span>)</a>
+<a class="sourceLine" id="cb11-33" data-line-number="33">    println(<span class="st">&quot;$g</span><span class="sc">\t</span><span class="st">   $(first(v))</span><span class="sc">\t</span><span class="st">  $(rpad(x, 6))</span><span class="sc">\t</span><span class="st">   $(μ′)&quot;</span>)</a>
+<a class="sourceLine" id="cb11-34" data-line-number="34"><span class="kw">end</span></a></code></pre>
+<pre class="sourceCode julia" id="cb12"><code class="sourceCode julia"></code></pre>
