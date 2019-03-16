@@ -80,3 +80,14 @@ repo        = "github.com/jpfairbanks/SemanticModels.jl.git",
 
 # # rm(normpath(@__FILE__, "../src/contributing.md"))
 # # rm(normpath(@__FILE__, "../src/license.md"))
+
+# Some tools for rendering notebooks
+# jupytext --to md --output - agentgraft.jl | pandoc -t html -f markdown > ../doc/src/examples/agentgraft.html
+# jupytext --to md --output - agentgraft.jl > ../doc/src/examples/agentgraft.md
+# jupytext --to md --output - agentbased.jl > ../doc/src/examples/agentbased.md
+# jupytext --update --output  ../doc/src/examples/agentbased.ipynb agentbased.jl
+# jupyter-nbconvert --to md --execute agentbased.ipynb
+# jupyter-nbconvert --to markdown --execute agentbased.ipynb
+# jupytext --update --output  ../doc/src/examples/agentgraft.ipynb agentgraft.jl
+#  jupyter-nbconvert --to markdown --execute agentgraft.ipynb
+# jupyter-nbconvert --to markdown agentgraft.ipynb jupyter-nbconvert --to markdown agentgraft.ipynb
