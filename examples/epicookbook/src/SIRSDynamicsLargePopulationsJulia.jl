@@ -129,7 +129,7 @@ infProp = zeros(Float64,length(sol),1);
 
 # Prepare the plots
 for i = 1:length(sol.t)
-    infProp[i,1] = *Iconfig/N;
+    infProp[i,1] = sol[:,i]*Iconfig/N;
 end
 # -
 
