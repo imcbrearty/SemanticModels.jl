@@ -57,7 +57,7 @@ end
 
 function model(::Type{SimpleProblem}, expr::Expr, entrypoint=:(main()))
     b = body(expr)
-    statements = b.args
+    @show statements = b.args
     imports = filter(issome,
         map(x-> if head(x) == :using
                    return x
@@ -67,7 +67,7 @@ function model(::Type{SimpleProblem}, expr::Expr, entrypoint=:(main()))
             statements)
     )
     blocks = filter(or(isblock, isfunc), statements)
-    funcs = filter(isfunc, statements)
+    funcs = filter(isfunc, blocks)
     return SimpleProblem(expr, imports, blocks, funcs, entrypoint)
 end
 
@@ -93,27 +93,40 @@ end
 
 m = model(SimpleProblem, deepcopy(expr), :(main(n::Int)))
 
+m.functions
+
 StatsMod = eval(m.expr.args[2])
 StatsMod.main(10)
 
 macro model(class, args...)
     @show class
-    @show args
+    #@show args
     expr = args[end]
+#     if expr.head == :quote
+#         expr = expr.args[end]
+#     end
     if expr.head == :block
+        @info "unblocking"
         expr = expr.args[end]
     end
-    
+    @show typeof(expr) head(expr)
     ex = Expr(:nothing)
     expr = quote $expr end
+    expr = expr.args[end]
     if length(args) > 1
         additional_args = args[1:end-1]
         ex = :(model($class, $expr, $additional_args...))
     else
         ex = :(model($class, $expr ))
     end
-    @show ex
-    return ex
+    #m = model(eval(class), expr, args[1:end-1]...)
+#     @show typeof(m.expr)
+#     @show m.blocks[1]
+    #@show e = m.expr
+    #return quote $e end#.args[end]
+    @show m = eval(ex)
+    @show ex2 =  m.expr.args[end]
+    return ex2
 end
 
 m′ = @model SimpleProblem main(n::Int64) quote
@@ -132,10 +145,10 @@ m′ = @model SimpleProblem main(n::Int64) quote
         ρ = bar(x,μ)
         return x, ρ
     end
-    end
+end
 end;
 
-m′.expr
+eval(m′.expr.args[end])
 
 m′.functions
 
@@ -143,3 +156,5 @@ m′.entry
 
 Mod = eval(m′.expr.args[end])
 getfield(Mod, entryname(m′))(10)
+
+
