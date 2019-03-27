@@ -1,0 +1,35 @@
+#!/usr/bin/env julia
+EXAMPLEDIR = "examples/"
+DOCSRC = "doc/src/examples/"
+
+try
+    mkdir("examples_stripped")
+catch
+    @info "directory exists" dir="examples_stripped"
+end
+
+
+files = readdir(EXAMPLEDIR)
+for file in files
+    if file[end-2:end] == ".jl"
+        @info "jupytexting file" file=file
+        # fname = file[1:end-3]
+        open("examples_stripped/$file", "w") do fp
+            # run(`jupytext --to markdown $file`)
+            for line in readlines("$EXAMPLEDIR/$file")
+                if !(line == "# -") && !(line == "# +")
+                    println(fp, line)
+                end
+            end
+        end
+        @info "literating file" file=file
+        Literate.markdown("examples_stripped/$file", "$DOCSRC/examples/", documenter=true)
+    else
+        @info "Skipping file" file=file
+        if file in ["agentbased.jl", "agentbased2.jl"]
+            @info "Copying file for inclusion"
+            cp("$EXAMPLEDIR/$file", "$DOCSRC/$file")
+        end
+    end
+end
+
