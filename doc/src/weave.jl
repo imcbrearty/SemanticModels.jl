@@ -16,9 +16,23 @@ using Weave
 
 const EXAMPLES_DIR = abspath(joinpath(@__DIR__, "..","..", "examples"))
 
-const JMD_DIR = abspath(joinpath(@__DIR__,"jmd"))
+const JMD_DIR = abspath(joinpath(@__DIR__,"examples","jmd"))
 
-const HTML_DIR = abspath(joinpath(@__DIR__,"html"))
+const HTML_DIR = abspath(joinpath(@__DIR__,"examples","html"))
+
+# +
+if isdir(JMD_DIR) 
+    nothing
+else 
+    mkpath(JMD_DIR) 
+end
+
+if isdir(HTML_DIR) 
+    nothing
+else 
+    mkpath(HTML_DIR) 
+end
+# -
 
 run(`find $EXAMPLES_DIR -maxdepth 1 -name "*.jl" -exec jupytext "{}" --to ipynb ";" `)
 
