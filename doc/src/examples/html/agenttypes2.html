@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>diffeq</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>agenttypes2</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -11771,149 +11771,27 @@ div#notebook {
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="@typegraph-example">@typegraph example<a class="anchor-link" href="#@typegraph-example">&#182;</a></h1><p>In this notebook, we will be going through a tutorial on how to use the <code>typegraph</code> functionality to extract the relationships between types and functions within programs.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">using</span> <span class="n">Pkg</span>
-<span class="n">Pkg</span><span class="o">.</span><span class="n">activate</span><span class="p">(</span><span class="s2">&quot;Algebra&quot;</span><span class="p">)</span>
-<span class="k">try</span>
-    <span class="n">using</span> <span class="n">Polynomials</span>
-<span class="n">catch</span>
-    <span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;Polynomials&quot;</span><span class="p">)</span>
-<span class="n">end</span>
-<span class="k">try</span>
-    <span class="n">using</span> <span class="n">DifferentialEquations</span>
-<span class="n">catch</span>
-    <span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;DifferentialEquations&quot;</span><span class="p">)</span>
-<span class="n">end</span>
-<span class="k">try</span>
-    <span class="n">using</span> <span class="n">Test</span>
-<span class="n">catch</span>
-    <span class="n">Pkg</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
-<span class="n">end</span>
-
-<span class="n">using</span> <span class="n">Test</span>
-<span class="n">using</span> <span class="n">Polynomials</span>
-<span class="n">using</span> <span class="n">DifferentialEquations</span>
-<span class="kn">import</span> <span class="nn">DifferentialEquations</span><span class="p">:</span> <span class="n">solve</span>
+<div class=" highlight hl-julia"><pre><span></span><span class="k">using</span> <span class="n">SemanticModels</span>
+<span class="k">using</span> <span class="n">SemanticModels</span><span class="o">.</span><span class="n">Parsers</span>
+<span class="k">using</span> <span class="n">SemanticModels</span><span class="o">.</span><span class="n">ModelTools</span>
+<span class="k">import</span> <span class="n">SemanticModels</span><span class="o">.</span><span class="n">ModelTools</span><span class="o">:</span> <span class="n">CallArg</span><span class="p">,</span> <span class="n">RetArg</span><span class="p">,</span> <span class="n">Edge</span><span class="p">,</span> <span class="n">Edges</span><span class="p">,</span> <span class="nd">@typegraph</span><span class="p">,</span> <span class="n">typegraph</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>┌ Info: Precompiling Polynomials [f27b6e38-b328-58d1-80ce-0feddd5e7a45]
-└ @ Base loading.jl:1192
-┌ Info: Recompiling stale cache file /home/infvie/.julia/compiled/v1.0/DifferentialEquations/UQdwS.ji for DifferentialEquations [0c46a032-eb83-5123-abaf-570d42b7fbaa]
-└ @ Base loading.jl:1190
-ERROR: LoadError: ArgumentError: Package DifferentialEquations does not have DiffEqPDEBase in its dependencies:
-- If you have DifferentialEquations checked out for development and have
-  added DiffEqPDEBase as a dependency but haven&#39;t updated your primary
-  environment&#39;s manifest file, try `Pkg.resolve()`.
-- Otherwise you may need to report an issue with DifferentialEquations
-Stacktrace:
- [1] require(::Module, ::Symbol) at ./loading.jl:836
- [2] include at ./boot.jl:317 [inlined]
- [3] include_relative(::Module, ::String) at ./loading.jl:1044
- [4] include(::Module, ::String) at ./sysimg.jl:29
- [5] top-level scope at none:2
- [6] eval at ./boot.jl:319 [inlined]
- [7] eval(::Expr) at ./client.jl:393
- [8] top-level scope at ./none:3
-in expression starting at /home/infvie/.julia/packages/DifferentialEquations/88DSk/src/DifferentialEquations.jl:8
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre><span class="ansi-green-intense-fg ansi-bold">  Updating</span> registry at `~/.julia/registries/General`
-<span class="ansi-green-intense-fg ansi-bold">  Updating</span> git-repo `https://github.com/JuliaRegistries/General.git`
-<span class="ansi-green-intense-fg ansi-bold"> Resolving</span> package versions...
-<span class="ansi-green-intense-fg ansi-bold"> Installed</span> DifferentialEquations ─ v6.3.0
-<span class="ansi-green-intense-fg ansi-bold"> Installed</span> RandomNumbers ───────── v1.2.0
-<span class="ansi-green-intense-fg ansi-bold">  Updating</span> `~/code/gtri/semanticmodels/examples/Algebra/Project.toml`
-<span class="ansi-black-intense-fg"> [no changes]</span>
-<span class="ansi-green-intense-fg ansi-bold">  Updating</span> `~/code/gtri/semanticmodels/examples/Algebra/Manifest.toml`
- <span class="ansi-black-intense-fg"> [aae01518]</span><span class="ansi-yellow-intense-fg"> ↑ BandedMatrices v0.8.2 ⇒ v0.9.0</span>
- <span class="ansi-black-intense-fg"> [34da2185]</span><span class="ansi-yellow-intense-fg"> ↑ Compat v2.0.0 ⇒ v2.1.0</span>
- <span class="ansi-black-intense-fg"> [5078a376]</span><span class="ansi-yellow-intense-fg"> ↑ LazyArrays v0.7.0 ⇒ v0.7.1</span>
- <span class="ansi-black-intense-fg"> [a3b82374]</span><span class="ansi-green-intense-fg"> + MatrixFactorizations v0.0.4</span>
- <span class="ansi-black-intense-fg"> [1dea7af3]</span><span class="ansi-yellow-intense-fg"> ↑ OrdinaryDiffEq v5.4.0 ⇒ v5.4.1</span>
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>┌ Info: Precompiling DifferentialEquations [0c46a032-eb83-5123-abaf-570d42b7fbaa]
-└ @ Base loading.jl:1192
-┌ Warning: Module RandomNumbers with build ID 6996517946576 is missing from the cache.
-│ This may mean RandomNumbers [e6cf234a-135c-5ec9-84dd-332b85af5143] does not support precompilation but is imported by a module that does.
-└ @ Base loading.jl:947
-┌ Warning: Module RandomNumbers with build ID 6996517946576 is missing from the cache.
-│ This may mean RandomNumbers [e6cf234a-135c-5ec9-84dd-332b85af5143] does not support precompilation but is imported by a module that does.
-└ @ Base loading.jl:947
-┌ Warning: Module DiffEqNoiseProcess with build ID 6991885160176 is missing from the cache.
-│ This may mean DiffEqNoiseProcess [77a26b50-5914-5dd7-bc55-306e6241c503] does not support precompilation but is imported by a module that does.
-└ @ Base loading.jl:947
-┌ Warning: Module StochasticDiffEq with build ID 7006928307896 is missing from the cache.
-│ This may mean StochasticDiffEq [789caeaf-c7a9-5a7d-9973-96adeb23e2a0] does not support precompilation but is imported by a module that does.
-└ @ Base loading.jl:947
-┌ Warning: The call to compilecache failed to create a usable precompiled cache file for DifferentialEquations [0c46a032-eb83-5123-abaf-570d42b7fbaa]
-│   exception = ErrorException(&#34;Required dependency RandomNumbers [e6cf234a-135c-5ec9-84dd-332b85af5143] failed to load from a cache file.&#34;)
-└ @ Base loading.jl:969
-┌ Info: Recompiling stale cache file /home/infvie/.julia/compiled/v1.0/DiffEqNoiseProcess/NSRab.ji for DiffEqNoiseProcess [77a26b50-5914-5dd7-bc55-306e6241c503]
-└ @ Base loading.jl:1190
-┌ Warning: The call to compilecache failed to create a usable precompiled cache file for DiffEqNoiseProcess [77a26b50-5914-5dd7-bc55-306e6241c503]
-│   exception = ErrorException(&#34;Required dependency RandomNumbers [e6cf234a-135c-5ec9-84dd-332b85af5143] failed to load from a cache file.&#34;)
-└ @ Base loading.jl:969
-┌ Info: Recompiling stale cache file /home/infvie/.julia/compiled/v1.0/RandomNumbers/pgCpR.ji for RandomNumbers [e6cf234a-135c-5ec9-84dd-332b85af5143]
-└ @ Base loading.jl:1190
-┌ Info: Precompiling StochasticDiffEq [789caeaf-c7a9-5a7d-9973-96adeb23e2a0]
-└ @ Base loading.jl:1192
-┌ Warning: Module RandomNumbers with build ID 7078776399716 is missing from the cache.
-│ This may mean RandomNumbers [e6cf234a-135c-5ec9-84dd-332b85af5143] does not support precompilation but is imported by a module that does.
-└ @ Base loading.jl:947
-┌ Info: Precompiling DiffEqJump [c894b116-72e5-5b58-be3c-e6d8d4ac2b12]
-└ @ Base loading.jl:1192
-┌ Warning: Module RandomNumbers with build ID 7078776399716 is missing from the cache.
-│ This may mean RandomNumbers [e6cf234a-135c-5ec9-84dd-332b85af5143] does not support precompilation but is imported by a module that does.
-└ @ Base loading.jl:947
-┌ Info: Precompiling DiffEqFinancial [5a0ffddc-d203-54b0-88ba-2c03c0fc2e67]
-└ @ Base loading.jl:1192
-┌ Warning: Module DiffEqNoiseProcess with build ID 7076967550210 is missing from the cache.
-│ This may mean DiffEqNoiseProcess [77a26b50-5914-5dd7-bc55-306e6241c503] does not support precompilation but is imported by a module that does.
-└ @ Base loading.jl:947
-┌ Info: Recompiling stale cache file /home/infvie/.julia/compiled/v1.0/MultiScaleArrays/XBvBT.ji for MultiScaleArrays [f9640e96-87f6-5992-9c3b-0743c6a49ffa]
-└ @ Base loading.jl:1190
-┌ Warning: Module StochasticDiffEq with build ID 7089780863935 is missing from the cache.
-│ This may mean StochasticDiffEq [789caeaf-c7a9-5a7d-9973-96adeb23e2a0] does not support precompilation but is imported by a module that does.
-└ @ Base loading.jl:947
-</pre>
-</div>
-</div>
-
 </div>
 </div>
 
@@ -11922,10 +11800,8 @@ in expression starting at /home/infvie/.julia/packages/DifferentialEquations/88D
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>f = @ode_def LotkaVolterra begin
-  dx = a<em>x - b</em>x<em>y
-  dy = -c</em>y + d<em>x</em>y
-end a b c d</p>
+<p>After loading <code>@typegraph</code> in to our workspace, we simply begin the extraction by calling the macro immediately followed by an <code>Expr</code> which will return an edge list which is easily passed through to <code>MetaGraphs.jl</code> to visualize the transformations that are taking place throughout the code.</p>
+<p>*<em>To learn more about <code>Expr</code> &amp; metaprogramming, we recommend looking at the offcial <a href="@https://docs.julialang.org/en/v1.0/manual/metaprogramming/">Julia docs</a> on the topic.</em></p>
 
 </div>
 </div>
@@ -11935,16 +11811,10 @@ end a b c d</p>
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;   hookeslaw</span>
+<div class=" highlight hl-julia"><pre><span></span><span class="k">using</span> <span class="n">SemanticModels</span><span class="o">.</span><span class="n">Parsers</span>
+<span class="k">import</span> <span class="n">Base</span><span class="o">:</span> <span class="o">==</span>
 
-<span class="sd">the ODE representation of a spring. The solutions are periodic functions.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="n">function</span> <span class="n">hookeslaw</span><span class="p">(</span><span class="n">du</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-    <span class="c1"># u[1] = p</span>
-    <span class="c1"># u[2] = v</span>
-    <span class="n">du</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-    <span class="n">du</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">end</span>
+<span class="n">shorttype</span><span class="p">(</span><span class="n">T</span><span class="o">::</span><span class="kt">Type</span><span class="p">)</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">name</span>
 </pre></div>
 
 </div>
@@ -11963,7 +11833,7 @@ end a b c d</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>hookeslaw</pre>
+<pre>shorttype (generic function with 1 method)</pre>
 </div>
 
 </div>
@@ -11971,22 +11841,55 @@ end a b c d</p>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Below we are using our <code>parsefile</code> function to take scripts and wrap them around in <code>module</code> headings that way they can be consumed by our other API's. We then pass off our <code>Expr</code>s to our <code>typegraph</code> function which collects all the type information we would like extracted from the code.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;    SpringModel</span>
+<div class=" highlight hl-julia"><pre><span></span><span class="n">expr</span> <span class="o">=</span> <span class="n">parsefile</span><span class="p">(</span><span class="s">&quot;agentbased2.jl&quot;</span><span class="p">)</span>
+<span class="n">expr2</span> <span class="o">=</span> <span class="n">ModelTools</span><span class="o">.</span><span class="n">typegraph</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="k">end</span><span class="p">])</span>
+<span class="n">expr3</span> <span class="o">=</span> <span class="o">:</span><span class="p">(</span><span class="k">module</span> <span class="n">Foo</span>
+    <span class="k">using</span> <span class="n">SemanticModels</span><span class="o">.</span><span class="n">ModelTools</span>
+    <span class="k">import</span> <span class="n">SemanticModels</span><span class="o">.</span><span class="n">ModelTools</span><span class="o">:</span> <span class="n">CallArg</span><span class="p">,</span> <span class="n">RetArg</span>
+    <span class="o">$</span><span class="p">(</span><span class="n">expr2</span><span class="o">.</span><span class="n">args</span><span class="o">...</span><span class="p">)</span> <span class="k">end</span><span class="p">);</span>
+</pre></div>
 
-<span class="sd">represents the second order linear ODE goverened by [`hookeslaw`](@ref).</span>
+</div>
+</div>
+</div>
 
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="n">mutable</span> <span class="n">struct</span> <span class="n">SpringModel</span><span class="p">{</span><span class="n">F</span><span class="p">,</span><span class="n">D</span><span class="p">,</span><span class="n">U</span><span class="p">}</span>
-    <span class="n">frequency</span><span class="p">::</span><span class="n">F</span>
-    <span class="n">domain</span><span class="p">::</span><span class="n">D</span>
-    <span class="n">initial_position</span><span class="p">::</span><span class="n">U</span>
-<span class="n">end</span>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In the above example, we have a simple agent based simulation where we defined new stucts to collect the singltonian type information for our simulation. To reduce the nosie from collecting the iterations throughout the runtime of our model we need to collect the unique calls through our our example which contain the relevant information.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-julia"><pre><span></span><span class="n">Mod</span> <span class="o">=</span> <span class="n">eval</span><span class="p">(</span><span class="n">expr3</span><span class="p">)</span>
+<span class="n">Mod</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">edgelist_symbol</span> <span class="o">=</span> <span class="n">Mod</span><span class="o">.</span><span class="n">edgelist</span>
+
+<span class="n">E</span> <span class="o">=</span> <span class="n">unique</span><span class="p">((</span><span class="n">f</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">ret</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="kp">in</span> <span class="n">Edges</span><span class="p">(</span><span class="n">edgelist_symbol</span><span class="p">))</span>
+<span class="n">E</span> <span class="o">=</span> <span class="n">unique</span><span class="p">((</span><span class="s">&quot;</span><span class="se">\&quot;</span><span class="si">$</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">func</span><span class="p">)</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">tuple</span><span class="p">(</span><span class="n">shorttype</span><span class="o">.</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">args</span><span class="p">)</span><span class="o">...</span><span class="p">),</span> <span class="n">shorttype</span><span class="o">.</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">ret</span><span class="p">))</span> <span class="k">for</span> <span class="n">f</span> <span class="kp">in</span> <span class="n">Edges</span><span class="p">(</span><span class="n">edgelist_symbol</span><span class="p">))</span>
+<span class="nd">@show</span> <span class="n">E</span>
 </pre></div>
 
 </div>
@@ -11999,44 +11902,15 @@ end a b c d</p>
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[3]:</div>
+<div class="prompt"></div>
 
 
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>SpringModel</pre>
-</div>
-
-</div>
-
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>newsam.agents = Symbol[:I, :I, :I, :I, :S, :I, :I, :S, :I, :I, :I, :I, :I, :I, :S, :I, :S, :R, :I, :I]
+E = Tuple{String,Tuple{Symbol,Vararg{Symbol,N} where N},Symbol}[(&#34;\&#34;count\&#34;&#34;, (:StateModel, :Symbol), :Int64), (&#34;\&#34;count\&#34;&#34;, (:StateModel,), :Int64), (&#34;\&#34;stateload\&#34;&#34;, (:StateModel, :Symbol), :Float64), (&#34;\&#34;tick!\&#34;&#34;, (:StateModel,), :Array), (&#34;\&#34;transition\&#34;&#34;, (:StateModel, :Int64, :Symbol), :Symbol), (&#34;\&#34;describe\&#34;&#34;, (:StateModel,), :Array), (&#34;\&#34;step!\&#34;&#34;, (:StateModel, :Int64), :StateModel), (&#34;\&#34;main\&#34;&#34;, (:Int64,), :Tuple)]
+</pre>
 </div>
 </div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">parameters</span><span class="p">(</span><span class="n">spm</span><span class="p">::</span><span class="n">SpringModel</span><span class="p">)</span> <span class="o">=</span> <span class="n">spm</span><span class="o">.</span><span class="n">frequency</span>
-<span class="n">domain</span><span class="p">(</span><span class="n">spm</span><span class="p">::</span><span class="n">SpringModel</span><span class="p">)</span> <span class="o">=</span> <span class="n">spm</span><span class="o">.</span><span class="n">domain</span>
-<span class="n">flux</span><span class="p">(</span><span class="n">spm</span><span class="p">::</span><span class="n">SpringModel</span><span class="p">)</span> <span class="o">=</span> <span class="n">hookeslaw</span>
-<span class="n">initial_conditions</span><span class="p">(</span><span class="n">spm</span><span class="p">::</span><span class="n">SpringModel</span><span class="p">)</span> <span class="o">=</span> <span class="n">spm</span><span class="o">.</span><span class="n">initial_position</span>
-<span class="n">odeproblem</span><span class="p">(</span><span class="n">spm</span><span class="p">::</span><span class="n">SpringModel</span><span class="p">)</span> <span class="o">=</span> <span class="n">ODEProblem</span><span class="p">(</span><span class="n">flux</span><span class="p">(</span><span class="n">spm</span><span class="p">),</span> <span class="n">initial_conditions</span><span class="p">(</span><span class="n">spm</span><span class="p">),</span> <span class="n">domain</span><span class="p">(</span><span class="n">spm</span><span class="p">),</span> <span class="n">parameters</span><span class="p">(</span><span class="n">spm</span><span class="p">))</span>
-<span class="n">solve</span><span class="p">(</span><span class="n">spm</span><span class="p">::</span><span class="n">SpringModel</span><span class="p">,</span> <span class="n">alg</span><span class="o">=</span><span class="n">Vern7</span><span class="p">())</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">odeproblem</span><span class="p">(</span><span class="n">spm</span><span class="p">),</span> <span class="n">alg</span><span class="p">)</span>
-<span class="n">accelerate</span><span class="o">!(</span>spm::SpringModel, factor::Number<span class="o">)</span> <span class="o">=</span> begin
-    <span class="n">spm</span><span class="o">.</span><span class="n">frequency</span> <span class="o">=</span> <span class="n">factor</span><span class="o">*</span><span class="n">spm</span><span class="o">.</span><span class="n">frequency</span>
-<span class="n">end</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
 
 <div class="output_area">
 
@@ -12046,7 +11920,15 @@ end a b c d</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>accelerate! (generic function with 1 method)</pre>
+<pre>8-element Array{Tuple{String,Tuple{Symbol,Vararg{Symbol,N} where N},Symbol},1}:
+ (&#34;\&#34;count\&#34;&#34;, (:StateModel, :Symbol), :Int64)              
+ (&#34;\&#34;count\&#34;&#34;, (:StateModel,), :Int64)                      
+ (&#34;\&#34;stateload\&#34;&#34;, (:StateModel, :Symbol), :Float64)        
+ (&#34;\&#34;tick!\&#34;&#34;, (:StateModel,), :Array)                      
+ (&#34;\&#34;transition\&#34;&#34;, (:StateModel, :Int64, :Symbol), :Symbol)
+ (&#34;\&#34;describe\&#34;&#34;, (:StateModel,), :Array)                   
+ (&#34;\&#34;step!\&#34;&#34;, (:StateModel, :Int64), :StateModel)          
+ (&#34;\&#34;main\&#34;&#34;, (:Int64,), :Tuple)                            </pre>
 </div>
 
 </div>
@@ -12054,16 +11936,27 @@ end a b c d</p>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We are going to repeat the process again for another similar script to see if we are able to detect the differences between the two programs.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">struct</span> <span class="n">SIRParams</span><span class="p">{</span><span class="n">T</span><span class="p">,</span><span class="n">U</span><span class="p">}</span>
-    <span class="n">β</span><span class="p">::</span><span class="n">T</span>
-    <span class="n">γ</span><span class="p">::</span><span class="n">U</span>
-<span class="n">end</span>
+<div class=" highlight hl-julia"><pre><span></span><span class="n">expr</span> <span class="o">=</span> <span class="n">parsefile</span><span class="p">(</span><span class="s">&quot;agenttypes.jl&quot;</span><span class="p">)</span>
+<span class="n">expr2</span> <span class="o">=</span> <span class="n">ModelTools</span><span class="o">.</span><span class="n">typegraph</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="k">end</span><span class="p">]</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="k">end</span><span class="p">]</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="k">end</span><span class="p">])</span>
+<span class="n">expr3</span> <span class="o">=</span> <span class="o">:</span><span class="p">(</span><span class="k">module</span> <span class="n">ModTyped</span>
+    <span class="k">using</span> <span class="n">SemanticModels</span><span class="o">.</span><span class="n">ModelTools</span>
+    <span class="k">import</span> <span class="n">SemanticModels</span><span class="o">.</span><span class="n">ModelTools</span><span class="o">:</span> <span class="n">CallArg</span><span class="p">,</span> <span class="n">RetArg</span>
+    <span class="o">$</span><span class="p">(</span><span class="n">expr2</span><span class="o">.</span><span class="n">args</span><span class="o">...</span><span class="p">)</span> <span class="k">end</span><span class="p">);</span>
 </pre></div>
 
 </div>
@@ -12076,14 +11969,80 @@ end a b c d</p>
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">struct</span> <span class="n">SIRSimulation</span><span class="p">{</span><span class="n">V</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">P</span><span class="p">}</span>
-    <span class="n">initial_populations</span><span class="p">::</span><span class="n">V</span>
-    <span class="n">tspan</span><span class="p">::</span><span class="n">T</span>
-    <span class="n">params</span><span class="p">::</span><span class="n">P</span>
-<span class="n">end</span>
+<div class=" highlight hl-julia"><pre><span></span><span class="n">Mod</span> <span class="o">=</span> <span class="n">eval</span><span class="p">(</span><span class="n">expr3</span><span class="p">)</span>
+<span class="n">Mod</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">edgelist_typed</span> <span class="o">=</span> <span class="n">Mod</span><span class="o">.</span><span class="n">edgelist</span>
+
+<span class="n">E_typed</span> <span class="o">=</span> <span class="n">unique</span><span class="p">((</span><span class="s">&quot;</span><span class="se">\&quot;</span><span class="si">$</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">func</span><span class="p">)</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">tuple</span><span class="p">(</span><span class="n">shorttype</span><span class="o">.</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">args</span><span class="p">)</span><span class="o">...</span><span class="p">),</span> <span class="n">shorttype</span><span class="o">.</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">ret</span><span class="p">))</span> <span class="k">for</span> <span class="n">f</span> <span class="kp">in</span> <span class="n">Edges</span><span class="p">(</span><span class="n">edgelist_typed</span><span class="p">))</span>
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;18, Infected()=&gt;1, Recovered()=&gt;1]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;18, Infected()=&gt;1, Recovered()=&gt;1]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;17, Infected()=&gt;1, Recovered()=&gt;2]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;15, Infected()=&gt;2, Recovered()=&gt;3]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;13, Infected()=&gt;4, Recovered()=&gt;3]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;10, Infected()=&gt;8, Recovered()=&gt;2]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;3, Infected()=&gt;10, Recovered()=&gt;7]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;3, Infected()=&gt;6, Recovered()=&gt;11]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;7, Infected()=&gt;4, Recovered()=&gt;9]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;10, Infected()=&gt;2, Recovered()=&gt;8]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;18, Infected()=&gt;2, Recovered()=&gt;0]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;16, Infected()=&gt;3, Recovered()=&gt;1]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;11, Infected()=&gt;6, Recovered()=&gt;3]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;7, Infected()=&gt;8, Recovered()=&gt;5]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;4, Infected()=&gt;8, Recovered()=&gt;8]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;6, Infected()=&gt;7, Recovered()=&gt;7]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;4, Infected()=&gt;6, Recovered()=&gt;10]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;7, Infected()=&gt;8, Recovered()=&gt;5]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;3, Infected()=&gt;11, Recovered()=&gt;6]
+describe(sm) = Pair{_1,Int64} where _1[Susceptible()=&gt;2, Infected()=&gt;6, Recovered()=&gt;12]
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[6]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>16-element Array{Tuple{String,Tuple{Symbol,Vararg{Symbol,N} where N},Symbol},1}:
+ (&#34;\&#34;count\&#34;&#34;, (:StateModel, :Susceptible), :Int64)                   
+ (&#34;\&#34;count\&#34;&#34;, (:StateModel,), :Int64)                                
+ (&#34;\&#34;stateload\&#34;&#34;, (:StateModel, :Susceptible), :Float64)             
+ (&#34;\&#34;count\&#34;&#34;, (:StateModel, :Infected), :Int64)                      
+ (&#34;\&#34;stateload\&#34;&#34;, (:StateModel, :Infected), :Float64)                
+ (&#34;\&#34;count\&#34;&#34;, (:StateModel, :Recovered), :Int64)                     
+ (&#34;\&#34;stateload\&#34;&#34;, (:StateModel, :Recovered), :Float64)               
+ (&#34;\&#34;transition\&#34;&#34;, (:StateModel, :Int64, :Susceptible), :Susceptible)
+ (&#34;\&#34;transition\&#34;&#34;, (:StateModel, :Int64, :Susceptible), :Infected)   
+ (&#34;\&#34;transition\&#34;&#34;, (:StateModel, :Int64, :Infected), :Recovered)     
+ (&#34;\&#34;describe\&#34;&#34;, (:StateModel,), :Array)                             
+ (&#34;\&#34;transition\&#34;&#34;, (:StateModel, :Int64, :Recovered), :Susceptible)  
+ (&#34;\&#34;transition\&#34;&#34;, (:StateModel, :Int64, :Recovered), :Recovered)    
+ (&#34;\&#34;transition\&#34;&#34;, (:StateModel, :Int64, :Infected), :Infected)      
+ (&#34;\&#34;tick!\&#34;&#34;, (:StateModel,), :StateModel)                           
+ (&#34;\&#34;tick!\&#34;&#34;, (:StateModel,), :Tuple)                                </pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -12093,9 +12052,14 @@ end a b c d</p>
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">parameters</span><span class="p">(</span><span class="n">sir</span><span class="p">::</span><span class="n">SIRSimulation</span><span class="p">)</span> <span class="o">=</span> <span class="n">sir</span><span class="o">.</span><span class="n">params</span>
-<span class="n">domain</span><span class="p">(</span><span class="n">sir</span><span class="p">::</span><span class="n">SIRSimulation</span><span class="p">)</span> <span class="o">=</span> <span class="n">sir</span><span class="o">.</span><span class="n">tspan</span>
-<span class="n">initial_conditions</span><span class="p">(</span><span class="n">sir</span><span class="p">::</span><span class="n">SIRSimulation</span><span class="p">)</span> <span class="o">=</span> <span class="n">sir</span><span class="o">.</span><span class="n">initial_populations</span>
+<div class=" highlight hl-julia"><pre><span></span><span class="n">println</span><span class="p">(</span><span class="s">&quot;=============</span><span class="se">\n</span><span class="s">Symbols Graph</span><span class="se">\n</span><span class="s">============&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="nb">e</span> <span class="kp">in</span> <span class="n">E</span>
+    <span class="n">println</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="nb">e</span><span class="p">,</span> <span class="s">&quot;, &quot;</span><span class="p">))</span>
+<span class="k">end</span>
+<span class="n">println</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">=============</span><span class="se">\n</span><span class="s">Types Graph</span><span class="se">\n</span><span class="s">============&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="nb">e</span> <span class="kp">in</span> <span class="n">E_typed</span>
+    <span class="n">println</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="nb">e</span><span class="p">,</span> <span class="s">&quot;, &quot;</span><span class="p">))</span>
+<span class="k">end</span>
 </pre></div>
 
 </div>
@@ -12108,47 +12072,76 @@ end a b c d</p>
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[7]:</div>
+<div class="prompt"></div>
 
 
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>=============
+Symbols Graph
+============
+&#34;count&#34;, (:StateModel, :Symbol), Int64
+&#34;count&#34;, (:StateModel,), Int64
+&#34;stateload&#34;, (:StateModel, :Symbol), Float64
+&#34;tick!&#34;, (:StateModel,), Array
+&#34;transition&#34;, (:StateModel, :Int64, :Symbol), Symbol
+&#34;describe&#34;, (:StateModel,), Array
+&#34;step!&#34;, (:StateModel, :Int64), StateModel
+&#34;main&#34;, (:Int64,), Tuple
 
-
-<div class="output_text output_subarea output_execute_result">
-<pre>initial_conditions (generic function with 2 methods)</pre>
+=============
+Types Graph
+============
+&#34;count&#34;, (:StateModel, :Susceptible), Int64
+&#34;count&#34;, (:StateModel,), Int64
+&#34;stateload&#34;, (:StateModel, :Susceptible), Float64
+&#34;count&#34;, (:StateModel, :Infected), Int64
+&#34;stateload&#34;, (:StateModel, :Infected), Float64
+&#34;count&#34;, (:StateModel, :Recovered), Int64
+&#34;stateload&#34;, (:StateModel, :Recovered), Float64
+&#34;transition&#34;, (:StateModel, :Int64, :Susceptible), Susceptible
+&#34;transition&#34;, (:StateModel, :Int64, :Susceptible), Infected
+&#34;transition&#34;, (:StateModel, :Int64, :Infected), Recovered
+&#34;describe&#34;, (:StateModel,), Array
+&#34;transition&#34;, (:StateModel, :Int64, :Recovered), Susceptible
+&#34;transition&#34;, (:StateModel, :Int64, :Recovered), Recovered
+&#34;transition&#34;, (:StateModel, :Int64, :Infected), Infected
+&#34;tick!&#34;, (:StateModel,), StateModel
+&#34;tick!&#34;, (:StateModel,), Tuple
+</pre>
+</div>
 </div>
 
 </div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="visualizing-the-edges">visualizing the edges<a class="anchor-link" href="#visualizing-the-edges">&#182;</a></h2><p>Now that we have extracted the relevant type information, we want to visualize these transformations in a knowledge graph.</p>
 
 </div>
 </div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">function</span> <span class="n">flux</span><span class="p">(</span><span class="n">sir</span><span class="p">::</span><span class="n">SIRSimulation</span><span class="p">)</span>
-    <span class="n">function</span> <span class="n">sirflux</span><span class="p">(</span><span class="n">du</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-        <span class="c1"># println(&quot;sirflux call&quot;)</span>
-        <span class="c1"># @show t</span>
-        <span class="n">β</span><span class="p">,</span> <span class="n">γ</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">β</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">γ</span>
-        <span class="c1"># println(β, γ)</span>
-        <span class="n">N</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
-        <span class="c1"># println(N)</span>
-        <span class="n">infections</span> <span class="o">=</span> <span class="n">β</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">N</span><span class="p">)</span>
-        <span class="c1"># println(infections)</span>
-        <span class="n">recoveries</span> <span class="o">=</span> <span class="n">γ</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">N</span><span class="p">)</span>
-        <span class="c1"># println(recoveries)</span>
-        <span class="n">du</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">infections</span>
-        <span class="n">du</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span>  <span class="n">infections</span> <span class="o">-</span> <span class="n">recoveries</span>
-        <span class="n">du</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span>  <span class="n">recoveries</span>
-        <span class="c1"># println(du)</span>
-        <span class="c1"># println(u)</span>
-        <span class="k">return</span> <span class="n">du</span>
-    <span class="n">end</span>
-    <span class="k">return</span> <span class="n">sirflux</span>
-<span class="n">end</span>
+<div class=" highlight hl-julia"><pre><span></span><span class="k">using</span> <span class="n">MetaGraphs</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">LightGraphs</span><span class="p">;</span>
+<span class="c"># patch for https://github.com/JuliaGraphs/MetaGraphs.jl/pull/71/files</span>
+<span class="k">function</span> <span class="n">escapehtml</span><span class="p">(</span><span class="n">i</span><span class="o">::</span><span class="kt">AbstractString</span><span class="p">)</span>
+    <span class="c"># Refer to http://stackoverflow.com/a/7382028/3822752 for spec. links</span>
+    <span class="n">replace</span><span class="o">=</span><span class="n">Main</span><span class="o">.</span><span class="n">replace</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s">&quot;&amp;&quot;</span> <span class="o">=&gt;</span><span class="s">&quot;&amp;amp;&quot;</span><span class="p">)</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="o">=&gt;</span><span class="s">&quot;&amp;quot;&quot;</span><span class="p">)</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="s">&quot;&#39;&quot;</span> <span class="o">=&gt;</span><span class="s">&quot;&amp;#39;&quot;</span><span class="p">)</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="s">&quot;&lt;&quot;</span> <span class="o">=&gt;</span><span class="s">&quot;&amp;lt;&quot;</span><span class="p">)</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="s">&quot;&gt;&quot;</span> <span class="o">=&gt;</span><span class="s">&quot;&amp;gt;&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">o</span>
+<span class="k">end</span>
 </pre></div>
 
 </div>
@@ -12158,6 +12151,17 @@ end a b c d</p>
 <div class="output_wrapper">
 <div class="output">
 
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>WARNING: using LightGraphs.Edge in module Main conflicts with an existing identifier.
+</pre>
+</div>
+</div>
 
 <div class="output_area">
 
@@ -12167,7 +12171,7 @@ end a b c d</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>flux (generic function with 2 methods)</pre>
+<pre>escapehtml (generic function with 1 method)</pre>
 </div>
 
 </div>
@@ -12181,10 +12185,58 @@ end a b c d</p>
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">function</span> <span class="n">odeproblem</span><span class="p">(</span><span class="n">sir</span><span class="p">::</span><span class="n">SIRSimulation</span><span class="p">)</span>
-    <span class="n">problem</span> <span class="o">=</span> <span class="n">ODEProblem</span><span class="p">(</span><span class="n">flux</span><span class="p">(</span><span class="n">sir</span><span class="p">),</span> <span class="n">initial_conditions</span><span class="p">(</span><span class="n">sir</span><span class="p">),</span> <span class="n">domain</span><span class="p">(</span><span class="n">sir</span><span class="p">),</span> <span class="n">parameters</span><span class="p">(</span><span class="n">sir</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">problem</span>
-<span class="n">end</span>
+<div class=" highlight hl-julia"><pre><span></span><span class="k">function</span> <span class="n">buildgraph</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">MetaDiGraph</span><span class="p">();</span>
+    <span class="n">set_indexing_prop!</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="o">:</span><span class="n">label</span><span class="p">);</span>
+
+    <span class="k">for</span> <span class="nb">e</span> <span class="kp">in</span> <span class="n">E</span>
+        <span class="k">try</span>
+            <span class="n">g</span><span class="p">[</span><span class="nb">e</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="o">:</span><span class="n">label</span><span class="p">]</span>
+        <span class="k">catch</span>
+            <span class="n">add_vertex!</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="o">:</span><span class="n">label</span><span class="p">,</span><span class="nb">e</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="c"># add ags</span>
+        <span class="k">end</span>
+        
+        <span class="k">try</span>
+            <span class="n">g</span><span class="p">[</span><span class="nb">e</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="o">:</span><span class="n">label</span><span class="p">]</span>
+        <span class="k">catch</span>
+            <span class="n">add_vertex!</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="o">:</span><span class="n">label</span><span class="p">,</span><span class="nb">e</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="c"># add rets</span>
+        <span class="k">end</span>
+        
+        <span class="k">try</span>
+            <span class="n">add_edge!</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="n">g</span><span class="p">[</span><span class="nb">e</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="o">:</span><span class="n">label</span><span class="p">],</span><span class="n">g</span><span class="p">[</span><span class="nb">e</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="o">:</span><span class="n">label</span><span class="p">],</span><span class="o">:</span><span class="n">label</span><span class="p">,</span><span class="nb">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="c">#escapehtml(string(e[1]))) # add func edges</span>
+        <span class="k">catch</span>
+            <span class="nb">nothing</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">g</span>
+<span class="k">end</span>
+
+<span class="c"># for e in edges(g)</span>
+<span class="c">#     sn, dn = g[src(e),:label], g[dst(e), :label]</span>
+<span class="c">#     # f = g[sn, :label, dn, :label]</span>
+<span class="c">#     @show g.eprops[e][:label]</span>
+<span class="c">#     println(sn, &quot;---&gt;&quot;, dn)</span>
+<span class="c"># end</span>
+<span class="k">function</span> <span class="n">projectors</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">key</span><span class="o">=:</span><span class="n">label</span><span class="p">)</span>
+    <span class="n">newedges</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">v</span> <span class="kp">in</span> <span class="n">vertices</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">vprops</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">isa</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="kt">Tuple</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="kp">in</span> <span class="n">enumerate</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+            <span class="n">push!</span><span class="p">(</span><span class="n">newedges</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;π</span><span class="si">$i</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="k">end</span>
+        <span class="k">return</span> <span class="n">newedges</span>
+<span class="k">end</span>
+
+<span class="k">function</span> <span class="n">add_projectors!</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">key</span><span class="o">=:</span><span class="n">label</span><span class="p">)</span>
+    <span class="n">πs</span> <span class="o">=</span> <span class="n">projectors</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nb">e</span> <span class="kp">in</span> <span class="n">πs</span>
+        <span class="n">add_edge!</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="n">g</span><span class="p">[</span><span class="nb">e</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="o">:</span><span class="n">label</span><span class="p">],</span><span class="n">g</span><span class="p">[</span><span class="nb">e</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="o">:</span><span class="n">label</span><span class="p">],</span><span class="o">:</span><span class="n">label</span><span class="p">,</span><span class="nb">e</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">g</span><span class="p">,</span> <span class="n">πs</span>
+<span class="k">end</span>
 </pre></div>
 
 </div>
@@ -12203,7 +12255,7 @@ end a b c d</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>odeproblem (generic function with 2 methods)</pre>
+<pre>add_projectors! (generic function with 2 methods)</pre>
 </div>
 
 </div>
@@ -12217,32 +12269,20 @@ end a b c d</p>
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">solve</span><span class="p">(</span><span class="n">sir</span><span class="p">::</span><span class="n">SIRSimulation</span><span class="p">)</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">odeproblem</span><span class="p">(</span><span class="n">sir</span><span class="p">),</span> <span class="n">alg</span><span class="o">=</span><span class="n">Vern9</span><span class="p">())</span>
-<span class="n">function</span> <span class="n">RealSIR</span><span class="p">()</span>
-    <span class="c1"># β = NumParameter(:β, u&quot;person/s&quot;, TransitionRate)</span>
-    <span class="c1"># γ = NumParameter(:γ, u&quot;person/s&quot;, TransitionRate)</span>
-    <span class="c1"># @show β, γ</span>
-
-    <span class="c1"># S = NumVariable(:S, u&quot;person&quot;, Amount)</span>
-    <span class="c1"># I = NumVariable(:I, u&quot;person&quot;, Amount)</span>
-    <span class="c1"># R = NumVariable(:R, u&quot;person&quot;, Amount)</span>
-
-    <span class="c1"># sir = SIR([ODE(:(dS/dt -&gt; -βSI/N),</span>
-    <span class="c1">#             [β], [S]),</span>
-    <span class="c1">#             ODE(:(dI/dt -&gt; βSI/N -γI),</span>
-    <span class="c1">#                 [β, γ], [S, I]),</span>
-    <span class="c1">#         ODE(:(dR/dt -&gt; γI), [γ], [I])],</span>
-    <span class="c1">#         NumVariable.([:N,:S,:I,:R], u&quot;person&quot;, Amount),</span>
-    <span class="c1">#         NumVariable(:t, u&quot;s&quot;, Amount))</span>
-
-    <span class="k">return</span> <span class="n">odeproblem</span><span class="p">(</span><span class="n">SIRSimulation</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
-                      <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">100.0</span><span class="p">),</span>
-                       <span class="n">SIRParams</span><span class="p">(</span><span class="mf">0.50</span><span class="p">,</span><span class="mf">5.0</span><span class="p">)))</span>
-<span class="n">end</span>
-<span class="c1"># test case where nothing happens because of *0.0</span>
-    <span class="c1"># return odeproblem(SIRSimulation([100,0,0.0],</span>
-    <span class="c1">#                   (0,10.0),</span>
-    <span class="c1">#                    SIRParams(1.0,0.2)))</span>
+<div class=" highlight hl-julia"><pre><span></span><span class="k">function</span> <span class="n">draw</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="n">savegraph</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">DOTFormat</span><span class="p">())</span>
+    <span class="k">try</span>
+        <span class="n">run</span><span class="p">(</span><span class="sb">`dot -Tsvg -O </span><span class="si">$filename</span><span class="sb">`</span><span class="p">)</span>
+    <span class="k">catch</span> <span class="n">ex</span>
+        <span class="nd">@warn</span> <span class="s">&quot;Problem running dot&quot;</span> <span class="n">error</span><span class="o">=</span><span class="n">ex</span>
+        <span class="k">try</span>
+            <span class="n">run</span><span class="p">(</span><span class="sb">`dot --version`</span><span class="p">)</span>
+        <span class="k">catch</span>
+            <span class="nd">@warn</span> <span class="s">&quot;Dot is not installed&quot;</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="n">display</span><span class="p">(</span><span class="s">&quot;image/svg+xml&quot;</span><span class="p">,</span> <span class="n">read</span><span class="p">(</span><span class="s">&quot;</span><span class="si">$filename</span><span class="s">.svg&quot;</span><span class="p">,</span> <span class="n">String</span><span class="p">))</span>
+<span class="k">end</span>
 </pre></div>
 
 </div>
@@ -12261,7 +12301,7 @@ end a b c d</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>RealSIR (generic function with 1 method)</pre>
+<pre>draw (generic function with 1 method)</pre>
 </div>
 
 </div>
@@ -12269,36 +12309,14 @@ end a b c d</p>
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>this works at this point the next step is to run it with units
-β in person^-2/day
-γ in person/day</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>then use the number class to encode more information</p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">springmodel</span> <span class="o">=</span> <span class="n">SpringModel</span><span class="p">([</span><span class="mf">1.0</span><span class="p">],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="n">π</span><span class="p">),</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
-<span class="n">solslow</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">odeproblem</span><span class="p">(</span><span class="n">springmodel</span><span class="p">))</span>
-<span class="nd">@test</span> <span class="nb">abs</span><span class="p">(</span><span class="n">solslow</span><span class="p">(</span><span class="n">π</span><span class="o">/</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-6</span>
-<span class="nd">@test</span> <span class="nb">abs</span><span class="p">(</span><span class="n">solslow</span><span class="p">(</span><span class="mi">3</span><span class="n">π</span><span class="o">/</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-4</span>
+<div class=" highlight hl-julia"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">buildgraph</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
+<span class="n">add_projectors!</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12317,7 +12335,7 @@ end a b c d</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre><span class="ansi-green-intense-fg ansi-bold">Test Passed</span></pre>
+<pre>({11, 16} directed Int64 metagraph with Float64 weights defined by :weight (default weight 1.0), Any[(&#34;π1&#34;, :StateModel, (:StateModel, :Symbol)), (&#34;π2&#34;, :Symbol, (:StateModel, :Symbol)), (&#34;π1&#34;, :StateModel, (:StateModel,)), (&#34;π1&#34;, :StateModel, (:StateModel, :Int64, :Symbol)), (&#34;π2&#34;, :Int64, (:StateModel, :Int64, :Symbol)), (&#34;π3&#34;, :Symbol, (:StateModel, :Int64, :Symbol)), (&#34;π1&#34;, :StateModel, (:StateModel, :Int64)), (&#34;π2&#34;, :Int64, (:StateModel, :Int64)), (&#34;π1&#34;, :Int64, (:Int64,))])</pre>
 </div>
 
 </div>
@@ -12331,12 +12349,10 @@ end a b c d</p>
 <div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">accelerate</span><span class="o">!(</span>springmodel, <span class="m">4</span>.0<span class="o">)</span>
-<span class="n">solfast</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">odeproblem</span><span class="p">(</span><span class="n">springmodel</span><span class="p">),</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">)</span>
-<span class="nd">@test</span> <span class="nb">abs</span><span class="p">(</span><span class="n">solfast</span><span class="p">(</span><span class="n">π</span><span class="o">/</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-5</span>
-<span class="nd">@test_skip</span> <span class="nb">abs</span><span class="p">(</span><span class="n">solfast</span><span class="p">(</span><span class="mi">3</span><span class="n">π</span><span class="o">/</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-4</span>
-<span class="nd">@test</span> <span class="nb">abs</span><span class="p">(</span><span class="n">solfast</span><span class="p">(</span><span class="n">π</span><span class="o">/</span><span class="mi">4</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-5</span>
-<span class="nd">@test</span> <span class="nb">abs</span><span class="p">(</span><span class="n">solfast</span><span class="p">(</span><span class="mi">3</span><span class="n">π</span><span class="o">/</span><span class="mi">4</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-4</span>
+<div class=" highlight hl-julia"><pre><span></span><span class="n">h</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">buildgraph</span><span class="p">(</span><span class="n">E_typed</span><span class="p">)</span>
+<span class="n">g</span><span class="p">,</span> <span class="n">πs</span> <span class="o">=</span> <span class="n">add_projectors!</span><span class="p">(</span><span class="n">g</span><span class="p">);</span>
+<span class="n">g</span>
 </pre></div>
 
 </div>
@@ -12355,7 +12371,7 @@ end a b c d</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre><span class="ansi-green-intense-fg ansi-bold">Test Passed</span></pre>
+<pre>{15, 32} directed Int64 metagraph with Float64 weights defined by :weight (default weight 1.0)</pre>
 </div>
 
 </div>
@@ -12363,6 +12379,1012 @@ end a b c d</p>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-julia"><pre><span></span><span class="k">using</span> <span class="n">Colors</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">Colors</span><span class="o">.</span><span class="n">colormap</span><span class="p">(</span><span class="s">&quot;RdBu&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="n">nv</span><span class="p">(</span><span class="n">h</span><span class="p">))</span>
+<span class="n">color</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;#</span><span class="si">$</span><span class="p">(</span><span class="n">hex</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="n">v</span> <span class="o">+</span> <span class="n">floor</span><span class="p">(</span><span class="kt">Int</span><span class="p">,</span> <span class="n">nv</span><span class="p">(</span><span class="n">h</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)]))</span><span class="s">&quot;</span> <span class="c">#&quot;gray$(100 - 3v)&quot;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[13]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>color (generic function with 1 method)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We will draw the graph of types in initial model that uses symbols to represent the agent states. Remember that Symbol is type that represents "things that are like variable names" and in this case we are using the Symbol type to represent the agent states of :Susceptible, :Infected, and :Recovered.</p>
+<p>In this drawing each vertex has its own color. These colors will be used again when drawing the next graph.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-julia"><pre><span></span><span class="k">for</span> <span class="n">v</span> <span class="kp">in</span> <span class="n">vertices</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">vprops</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="o">:</span><span class="n">color</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">vprops</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="o">:</span><span class="n">style</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;filled&quot;</span>
+<span class="k">end</span>
+<span class="n">draw</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s">&quot;exampletypegraph.dot&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+<div class="output_svg output_subarea ">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.40.1 (20161225.0304)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="888pt" height="740pt"
+ viewBox="0.00 0.00 888.00 740.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 736)">
+<title>G</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-736 884,-736 884,4 -4,4"/>
+<!-- 1 -->
+<g id="node1" class="node">
+<title>1</title>
+<ellipse fill="#fd806e" stroke="#fd806e" cx="561" cy="-627" rx="107.781" ry="18"/>
+<text text-anchor="middle" x="561" y="-623.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel, :Susceptible)</text>
+</g>
+<!-- 2 -->
+<g id="node2" class="node">
+<title>2</title>
+<ellipse fill="#ff9987" stroke="#ff9987" cx="444" cy="-540" rx="29.4969" ry="18"/>
+<text text-anchor="middle" x="444" y="-536.3" font-family="Times,serif" font-size="14.00" fill="#000000">Int64</text>
+</g>
+<!-- 1&#45;&gt;2 -->
+<g id="edge1" class="edge">
+<title>1&#45;&gt;2</title>
+<path fill="none" stroke="#000000" d="M537.3233,-609.3943C518.1595,-595.1442 491.1567,-575.0652 471.1247,-560.1697"/>
+<polygon fill="#000000" stroke="#000000" points="473.1227,-557.2937 463.0095,-554.1353 468.9457,-562.911 473.1227,-557.2937"/>
+<text text-anchor="middle" x="524.5" y="-579.8" font-family="Times,serif" font-size="14.00" fill="#000000">count</text>
+</g>
+<!-- 4 -->
+<g id="node4" class="node">
+<title>4</title>
+<ellipse fill="#ffc5b7" stroke="#ffc5b7" cx="667" cy="-18" rx="37.8943" ry="18"/>
+<text text-anchor="middle" x="667" y="-14.3" font-family="Times,serif" font-size="14.00" fill="#000000">Float64</text>
+</g>
+<!-- 1&#45;&gt;4 -->
+<g id="edge2" class="edge">
+<title>1&#45;&gt;4</title>
+<path fill="none" stroke="#000000" d="M637.2782,-614.2449C707.2232,-600.3211 800,-575.2149 800,-540 800,-540 800,-540 800,-105 800,-61.942 750.5774,-39.0503 711.9872,-27.7389"/>
+<polygon fill="#000000" stroke="#000000" points="712.5143,-24.254 701.9442,-24.9777 710.6586,-31.0035 712.5143,-24.254"/>
+<text text-anchor="middle" x="824.5" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">stateload</text>
+</g>
+<!-- 7 -->
+<g id="node7" class="node">
+<title>7</title>
+<ellipse fill="#dff1fc" stroke="#dff1fc" cx="276" cy="-453" rx="133.7763" ry="18"/>
+<text text-anchor="middle" x="276" y="-449.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel, :Int64, :Susceptible)</text>
+</g>
+<!-- 2&#45;&gt;7 -->
+<g id="edge3" class="edge">
+<title>2&#45;&gt;7</title>
+<path fill="none" stroke="#000000" d="M421.3428,-528.2668C395.1453,-514.7002 351.4448,-492.0696 318.7899,-475.1591"/>
+<polygon fill="#000000" stroke="#000000" points="320.3857,-472.044 309.8962,-470.5534 317.1667,-478.26 320.3857,-472.044"/>
+<text text-anchor="middle" x="378" y="-492.8" font-family="Times,serif" font-size="14.00" fill="#000000">π2</text>
+</g>
+<!-- 10 -->
+<g id="node10" class="node">
+<title>10</title>
+<ellipse fill="#9bcdf2" stroke="#9bcdf2" cx="226" cy="-279" rx="122.3786" ry="18"/>
+<text text-anchor="middle" x="226" y="-275.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel, :Int64, :Infected)</text>
+</g>
+<!-- 2&#45;&gt;10 -->
+<g id="edge4" class="edge">
+<title>2&#45;&gt;10</title>
+<path fill="none" stroke="#000000" d="M442.3866,-521.992C439.8578,-500.3133 433.6357,-463.2948 419,-435 407.5701,-412.9028 357.6239,-348.0808 311,-315 302.8638,-309.2272 293.6585,-304.1332 284.3852,-299.7293"/>
+<polygon fill="#000000" stroke="#000000" points="285.6811,-296.4744 275.1262,-295.5558 282.8046,-302.856 285.6811,-296.4744"/>
+<text text-anchor="middle" x="415" y="-405.8" font-family="Times,serif" font-size="14.00" fill="#000000">π2</text>
+</g>
+<!-- 13 -->
+<g id="node13" class="node">
+<title>13</title>
+<ellipse fill="#5295d6" stroke="#5295d6" cx="217" cy="-105" rx="130.777" ry="18"/>
+<text text-anchor="middle" x="217" y="-101.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel, :Int64, :Recovered)</text>
+</g>
+<!-- 2&#45;&gt;13 -->
+<g id="edge5" class="edge">
+<title>2&#45;&gt;13</title>
+<path fill="none" stroke="#000000" d="M421.4815,-528.1688C416.4816,-525.873 411.1386,-523.6661 406,-522 288.5848,-483.9313 235.3461,-539.9987 133,-471 68.0347,-427.2024 38,-400.85 38,-322.5 38,-322.5 38,-322.5 38,-192 38,-166.1939 98.9421,-140.883 149.7083,-124.2753"/>
+<polygon fill="#000000" stroke="#000000" points="150.9241,-127.5611 159.378,-121.175 148.7868,-120.8954 150.9241,-127.5611"/>
+<text text-anchor="middle" x="47" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">π2</text>
+</g>
+<!-- 3 -->
+<g id="node3" class="node">
+<title>3</title>
+<ellipse fill="#ffb0a0" stroke="#ffb0a0" cx="366" cy="-627" rx="62.2891" ry="18"/>
+<text text-anchor="middle" x="366" y="-623.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel,)</text>
+</g>
+<!-- 3&#45;&gt;2 -->
+<g id="edge6" class="edge">
+<title>3&#45;&gt;2</title>
+<path fill="none" stroke="#000000" d="M381.7845,-609.3943C393.6534,-596.1559 410.0325,-577.8868 423.0059,-563.4165"/>
+<polygon fill="#000000" stroke="#000000" points="425.7431,-565.6066 429.8126,-555.8244 420.5311,-560.9337 425.7431,-565.6066"/>
+<text text-anchor="middle" x="424.5" y="-579.8" font-family="Times,serif" font-size="14.00" fill="#000000">count</text>
+</g>
+<!-- 12 -->
+<g id="node12" class="node">
+<title>12</title>
+<ellipse fill="#6aaae3" stroke="#6aaae3" cx="286" cy="-540" rx="31.3957" ry="18"/>
+<text text-anchor="middle" x="286" y="-536.3" font-family="Times,serif" font-size="14.00" fill="#000000">Array</text>
+</g>
+<!-- 3&#45;&gt;12 -->
+<g id="edge7" class="edge">
+<title>3&#45;&gt;12</title>
+<path fill="none" stroke="#000000" d="M339.153,-610.7419C331.1334,-605.1122 322.7021,-598.3511 316,-591 309.463,-583.83 303.6659,-575.0082 298.9525,-566.7296"/>
+<polygon fill="#000000" stroke="#000000" points="301.9307,-564.8779 294.1098,-557.7306 295.7666,-568.1951 301.9307,-564.8779"/>
+<text text-anchor="middle" x="339" y="-579.8" font-family="Times,serif" font-size="14.00" fill="#000000">describe</text>
+</g>
+<!-- 14 -->
+<g id="node14" class="node">
+<title>14</title>
+<ellipse fill="#3d7dc2" stroke="#3d7dc2" cx="366" cy="-714" rx="51.9908" ry="18"/>
+<text text-anchor="middle" x="366" y="-710.3" font-family="Times,serif" font-size="14.00" fill="#000000">StateModel</text>
+</g>
+<!-- 3&#45;&gt;14 -->
+<g id="edge8" class="edge">
+<title>3&#45;&gt;14</title>
+<path fill="none" stroke="#000000" d="M350.9604,-644.9425C344.7445,-654.5099 339.6767,-666.6258 343,-678 343.936,-681.2036 345.2536,-684.3932 346.7898,-687.4749"/>
+<polygon fill="#000000" stroke="#000000" points="343.8568,-689.3949 351.8907,-696.3019 349.9176,-685.8924 343.8568,-689.3949"/>
+<text text-anchor="middle" x="355.5" y="-666.8" font-family="Times,serif" font-size="14.00" fill="#000000">tick!</text>
+</g>
+<!-- 15 -->
+<g id="node15" class="node">
+<title>15</title>
+<ellipse fill="#2a64a6" stroke="#2a64a6" cx="366" cy="-540" rx="31.3957" ry="18"/>
+<text text-anchor="middle" x="366" y="-536.3" font-family="Times,serif" font-size="14.00" fill="#000000">Tuple</text>
+</g>
+<!-- 3&#45;&gt;15 -->
+<g id="edge9" class="edge">
+<title>3&#45;&gt;15</title>
+<path fill="none" stroke="#000000" d="M366,-608.9735C366,-597.1918 366,-581.5607 366,-568.1581"/>
+<polygon fill="#000000" stroke="#000000" points="369.5001,-568.0033 366,-558.0034 362.5001,-568.0034 369.5001,-568.0033"/>
+<text text-anchor="middle" x="378.5" y="-579.8" font-family="Times,serif" font-size="14.00" fill="#000000">tick!</text>
+</g>
+<!-- 5 -->
+<g id="node5" class="node">
+<title>5</title>
+<ellipse fill="#ffd7cd" stroke="#ffd7cd" cx="500" cy="-279" rx="96.3833" ry="18"/>
+<text text-anchor="middle" x="500" y="-275.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel, :Infected)</text>
+</g>
+<!-- 5&#45;&gt;2 -->
+<g id="edge10" class="edge">
+<title>5&#45;&gt;2</title>
+<path fill="none" stroke="#000000" d="M496.1945,-297.0934C488.1421,-335.3217 468.743,-427.1172 452,-504 451.4197,-506.6646 450.8111,-509.4391 450.1996,-512.2132"/>
+<polygon fill="#000000" stroke="#000000" points="446.7637,-511.541 448.0178,-522.0614 453.598,-513.0551 446.7637,-511.541"/>
+<text text-anchor="middle" x="488.5" y="-405.8" font-family="Times,serif" font-size="14.00" fill="#000000">count</text>
+</g>
+<!-- 5&#45;&gt;4 -->
+<g id="edge11" class="edge">
+<title>5&#45;&gt;4</title>
+<path fill="none" stroke="#000000" d="M494.7573,-260.668C487.9555,-233.3364 478.8582,-180.8525 496,-141 519.8619,-85.5241 584.0935,-50.4379 626.6835,-32.5201"/>
+<polygon fill="#000000" stroke="#000000" points="628.2686,-35.6539 636.2129,-28.644 625.6311,-29.1698 628.2686,-35.6539"/>
+<text text-anchor="middle" x="520.5" y="-144.8" font-family="Times,serif" font-size="14.00" fill="#000000">stateload</text>
+</g>
+<!-- 6 -->
+<g id="node6" class="node">
+<title>6</title>
+<ellipse fill="#ffe7e1" stroke="#ffe7e1" cx="667" cy="-105" rx="104.7816" ry="18"/>
+<text text-anchor="middle" x="667" y="-101.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel, :Recovered)</text>
+</g>
+<!-- 6&#45;&gt;2 -->
+<g id="edge12" class="edge">
+<title>6&#45;&gt;2</title>
+<path fill="none" stroke="#000000" d="M665.6681,-123.3193C664.5045,-140.9178 663,-168.2614 663,-192 663,-453 663,-453 663,-453 663,-491.463 544.8514,-520.3596 482.1146,-532.9923"/>
+<polygon fill="#000000" stroke="#000000" points="481.3166,-529.5822 472.1821,-534.9498 482.6701,-536.4501 481.3166,-529.5822"/>
+<text text-anchor="middle" x="678.5" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">count</text>
+</g>
+<!-- 6&#45;&gt;4 -->
+<g id="edge13" class="edge">
+<title>6&#45;&gt;4</title>
+<path fill="none" stroke="#000000" d="M667,-86.9735C667,-75.1918 667,-59.5607 667,-46.1581"/>
+<polygon fill="#000000" stroke="#000000" points="670.5001,-46.0033 667,-36.0034 663.5001,-46.0034 670.5001,-46.0033"/>
+<text text-anchor="middle" x="691.5" y="-57.8" font-family="Times,serif" font-size="14.00" fill="#000000">stateload</text>
+</g>
+<!-- 8 -->
+<g id="node8" class="node">
+<title>8</title>
+<ellipse fill="#c9e7f9" stroke="#c9e7f9" cx="297" cy="-18" rx="51.1914" ry="18"/>
+<text text-anchor="middle" x="297" y="-14.3" font-family="Times,serif" font-size="14.00" fill="#000000">Susceptible</text>
+</g>
+<!-- 7&#45;&gt;8 -->
+<g id="edge14" class="edge">
+<title>7&#45;&gt;8</title>
+<path fill="none" stroke="#000000" d="M318.1192,-435.8979C345.4485,-421.7073 376,-398.5617 376,-366 376,-366 376,-366 376,-105 376,-77.3855 353.9162,-54.6514 333.1008,-39.3564"/>
+<polygon fill="#000000" stroke="#000000" points="334.8384,-36.3016 324.6304,-33.4648 330.8413,-42.0482 334.8384,-36.3016"/>
+<text text-anchor="middle" x="402" y="-231.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 9 -->
+<g id="node9" class="node">
+<title>9</title>
+<ellipse fill="#b3dbf6" stroke="#b3dbf6" cx="274" cy="-366" rx="39.7935" ry="18"/>
+<text text-anchor="middle" x="274" y="-362.3" font-family="Times,serif" font-size="14.00" fill="#000000">Infected</text>
+</g>
+<!-- 7&#45;&gt;9 -->
+<g id="edge15" class="edge">
+<title>7&#45;&gt;9</title>
+<path fill="none" stroke="#000000" d="M275.5856,-434.9735C275.3148,-423.1918 274.9554,-407.5607 274.6473,-394.1581"/>
+<polygon fill="#000000" stroke="#000000" points="278.1429,-393.9202 274.4139,-384.0034 271.1447,-394.0812 278.1429,-393.9202"/>
+<text text-anchor="middle" x="302" y="-405.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 8&#45;&gt;1 -->
+<g id="edge16" class="edge">
+<title>8&#45;&gt;1</title>
+<path fill="none" stroke="#000000" d="M329.9543,-32.056C378.5234,-52.649 472.3026,-91.9422 553,-123 575.0422,-131.4833 588.3293,-122.4906 603,-141 653.4408,-204.6392 624,-241.2952 624,-322.5 624,-540 624,-540 624,-540 624,-564.4193 607.5168,-586.6198 591.413,-602.4825"/>
+<polygon fill="#000000" stroke="#000000" points="589.0215,-599.9269 584.1011,-609.3099 593.7989,-605.0432 589.0215,-599.9269"/>
+<text text-anchor="middle" x="632" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">π2</text>
+</g>
+<!-- 8&#45;&gt;7 -->
+<g id="edge17" class="edge">
+<title>8&#45;&gt;7</title>
+<path fill="none" stroke="#000000" d="M250.5903,-25.9681C192.3823,-37.0168 97.6729,-58.8503 77,-87 21.5516,-162.5022 51.6376,-213.965 95,-297 126.3738,-357.0779 191.4231,-404.011 234.386,-430.1076"/>
+<polygon fill="#000000" stroke="#000000" points="232.8161,-433.2464 243.1985,-435.3574 236.3986,-427.2326 232.8161,-433.2464"/>
+<text text-anchor="middle" x="76" y="-231.8" font-family="Times,serif" font-size="14.00" fill="#000000">π3</text>
+</g>
+<!-- 9&#45;&gt;5 -->
+<g id="edge18" class="edge">
+<title>9&#45;&gt;5</title>
+<path fill="none" stroke="#000000" d="M304.4794,-354.2668C341.297,-340.0937 403.8129,-316.0278 448.2372,-298.9264"/>
+<polygon fill="#000000" stroke="#000000" points="449.6316,-302.1401 457.7066,-295.2811 447.1168,-295.6074 449.6316,-302.1401"/>
+<text text-anchor="middle" x="408" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">π2</text>
+</g>
+<!-- 9&#45;&gt;10 -->
+<g id="edge19" class="edge">
+<title>9&#45;&gt;10</title>
+<path fill="none" stroke="#000000" d="M250.1704,-351.4301C242.8001,-345.691 235.4546,-338.4377 231,-330 227.402,-323.1848 225.6664,-315.1423 224.9449,-307.4835"/>
+<polygon fill="#000000" stroke="#000000" points="228.4389,-307.268 224.5098,-297.4287 221.4455,-307.5707 228.4389,-307.268"/>
+<text text-anchor="middle" x="239" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">π3</text>
+</g>
+<!-- 10&#45;&gt;9 -->
+<g id="edge20" class="edge">
+<title>10&#45;&gt;9</title>
+<path fill="none" stroke="#000000" d="M236.8298,-297.2306C240.1429,-302.8965 243.7649,-309.1822 247,-315 251.4093,-322.9295 256.0779,-331.6311 260.2705,-339.5663"/>
+<polygon fill="#000000" stroke="#000000" points="257.1811,-341.2114 264.9295,-348.4372 263.3783,-337.9565 257.1811,-341.2114"/>
+<text text-anchor="middle" x="281" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 11 -->
+<g id="node11" class="node">
+<title>11</title>
+<ellipse fill="#82bdec" stroke="#82bdec" cx="245" cy="-192" rx="48.1917" ry="18"/>
+<text text-anchor="middle" x="245" y="-188.3" font-family="Times,serif" font-size="14.00" fill="#000000">Recovered</text>
+</g>
+<!-- 10&#45;&gt;11 -->
+<g id="edge21" class="edge">
+<title>10&#45;&gt;11</title>
+<path fill="none" stroke="#000000" d="M229.9368,-260.9735C232.5098,-249.1918 235.9235,-233.5607 238.8505,-220.1581"/>
+<polygon fill="#000000" stroke="#000000" points="242.3539,-220.5199 241.0682,-210.0034 235.5151,-219.0263 242.3539,-220.5199"/>
+<text text-anchor="middle" x="263" y="-231.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 11&#45;&gt;6 -->
+<g id="edge22" class="edge">
+<title>11&#45;&gt;6</title>
+<path fill="none" stroke="#000000" d="M293.2007,-190.5893C353.8418,-187.8419 460.7291,-179.7576 549,-156 575.2111,-148.9454 603.1512,-137.0825 625.2612,-126.5724"/>
+<polygon fill="#000000" stroke="#000000" points="626.882,-129.6763 634.3579,-122.1688 623.832,-123.3757 626.882,-129.6763"/>
+<text text-anchor="middle" x="600" y="-144.8" font-family="Times,serif" font-size="14.00" fill="#000000">π2</text>
+</g>
+<!-- 11&#45;&gt;13 -->
+<g id="edge23" class="edge">
+<title>11&#45;&gt;13</title>
+<path fill="none" stroke="#000000" d="M226.3847,-175.3649C221.3872,-169.7639 216.6408,-163.1137 214,-156 211.3261,-148.7971 210.8053,-140.6293 211.2866,-132.9744"/>
+<polygon fill="#000000" stroke="#000000" points="214.7686,-133.3318 212.456,-122.9924 207.8162,-132.5172 214.7686,-133.3318"/>
+<text text-anchor="middle" x="222" y="-144.8" font-family="Times,serif" font-size="14.00" fill="#000000">π3</text>
+</g>
+<!-- 13&#45;&gt;8 -->
+<g id="edge24" class="edge">
+<title>13&#45;&gt;8</title>
+<path fill="none" stroke="#000000" d="M233.5761,-86.9735C245.3152,-74.2072 261.2102,-56.9214 274.1509,-42.8484"/>
+<polygon fill="#000000" stroke="#000000" points="276.7987,-45.1398 280.9911,-35.4097 271.646,-40.4016 276.7987,-45.1398"/>
+<text text-anchor="middle" x="288" y="-57.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 13&#45;&gt;11 -->
+<g id="edge25" class="edge">
+<title>13&#45;&gt;11</title>
+<path fill="none" stroke="#000000" d="M223.8287,-123.2401C225.8847,-128.9063 228.0984,-135.1898 230,-141 232.4473,-148.4776 234.9281,-156.6306 237.1486,-164.18"/>
+<polygon fill="#000000" stroke="#000000" points="233.8433,-165.3491 239.9878,-173.9803 240.5669,-163.4013 233.8433,-165.3491"/>
+<text text-anchor="middle" x="261" y="-144.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 14&#45;&gt;1 -->
+<g id="edge26" class="edge">
+<title>14&#45;&gt;1</title>
+<path fill="none" stroke="#000000" d="M398.2003,-699.6337C429.6787,-685.5895 477.9637,-664.047 513.7828,-648.0661"/>
+<polygon fill="#000000" stroke="#000000" points="515.3596,-651.1952 523.0659,-643.9244 512.5075,-644.8026 515.3596,-651.1952"/>
+<text text-anchor="middle" x="483" y="-666.8" font-family="Times,serif" font-size="14.00" fill="#000000">π1</text>
+</g>
+<!-- 14&#45;&gt;3 -->
+<g id="edge27" class="edge">
+<title>14&#45;&gt;3</title>
+<path fill="none" stroke="#000000" d="M367.214,-695.6941C367.537,-690.0251 367.8402,-683.7566 368,-678 368.2015,-670.7396 368.069,-662.9 367.7956,-655.5964"/>
+<polygon fill="#000000" stroke="#000000" points="371.2825,-655.234 367.3168,-645.4094 364.2902,-655.5627 371.2825,-655.234"/>
+<text text-anchor="middle" x="376" y="-666.8" font-family="Times,serif" font-size="14.00" fill="#000000">π1</text>
+</g>
+<!-- 14&#45;&gt;5 -->
+<g id="edge28" class="edge">
+<title>14&#45;&gt;5</title>
+<path fill="none" stroke="#000000" d="M417.7219,-711.5807C513.5421,-705.6775 709,-686.3609 709,-627 709,-627 709,-627 709,-366 709,-342.4948 712.3146,-330.8965 695,-315 680.3577,-301.5569 639.2466,-292.9166 598.5257,-287.4815"/>
+<polygon fill="#000000" stroke="#000000" points="598.8382,-283.9931 588.4761,-286.2015 597.9538,-290.937 598.8382,-283.9931"/>
+<text text-anchor="middle" x="717" y="-492.8" font-family="Times,serif" font-size="14.00" fill="#000000">π1</text>
+</g>
+<!-- 14&#45;&gt;6 -->
+<g id="edge29" class="edge">
+<title>14&#45;&gt;6</title>
+<path fill="none" stroke="#000000" d="M416.9544,-710.408C543.8778,-700.781 864,-672.0358 864,-627 864,-627 864,-627 864,-192 864,-163.5485 794.3712,-138.1768 737.9041,-122.279"/>
+<polygon fill="#000000" stroke="#000000" points="738.8229,-118.9018 728.2522,-119.6162 736.9612,-125.6497 738.8229,-118.9018"/>
+<text text-anchor="middle" x="872" y="-405.8" font-family="Times,serif" font-size="14.00" fill="#000000">π1</text>
+</g>
+<!-- 14&#45;&gt;7 -->
+<g id="edge30" class="edge">
+<title>14&#45;&gt;7</title>
+<path fill="none" stroke="#000000" d="M345.1755,-697.0808C315.1795,-671.0361 261.6882,-617.8234 246,-558 239.0354,-531.4421 249.5512,-501.3298 259.9988,-480.1837"/>
+<polygon fill="#000000" stroke="#000000" points="263.1941,-481.6265 264.7312,-471.1438 256.9924,-478.3799 263.1941,-481.6265"/>
+<text text-anchor="middle" x="267" y="-579.8" font-family="Times,serif" font-size="14.00" fill="#000000">π1</text>
+</g>
+<!-- 14&#45;&gt;10 -->
+<g id="edge31" class="edge">
+<title>14&#45;&gt;10</title>
+<path fill="none" stroke="#000000" d="M315.4859,-709.3044C232.3989,-700.1688 76,-676.4102 76,-627 76,-627 76,-627 76,-366 76,-330.5021 107.8231,-309.2476 142.1538,-296.6464"/>
+<polygon fill="#000000" stroke="#000000" points="143.5516,-299.8674 151.8789,-293.3171 141.2843,-293.2447 143.5516,-299.8674"/>
+<text text-anchor="middle" x="84" y="-492.8" font-family="Times,serif" font-size="14.00" fill="#000000">π1</text>
+</g>
+<!-- 14&#45;&gt;13 -->
+<g id="edge32" class="edge">
+<title>14&#45;&gt;13</title>
+<path fill="none" stroke="#000000" d="M313.9498,-712.3992C212.9037,-707.8698 0,-690.761 0,-627 0,-627 0,-627 0,-192 0,-162.0104 72.3057,-137.6543 133.4416,-122.4206"/>
+<polygon fill="#000000" stroke="#000000" points="134.6464,-125.7295 143.5337,-119.9618 132.9894,-118.9285 134.6464,-125.7295"/>
+<text text-anchor="middle" x="8" y="-405.8" font-family="Times,serif" font-size="14.00" fill="#000000">π1</text>
+</g>
+</g>
+</svg>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We then onstruct the typegraph for the program 2, which uses singleton types to represent the state of the agents. One of the central tennants of this project is that the more information you inject into the julia type system, the more the compiler can help you. Here we will see that they type system knows about the structure of the agents behavior now that the we have encoded their states as types.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>now we draw the new, bigger type graph with the same color scheme as before. We define a graph homomorphism $\phi$ that maps every type to one of the vertices of the original graph show above. This homomorphism from $\phi: G \mapsto H$ shows how the semantics of the first program is embedded in the semantics of the second program.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-julia"><pre><span></span><span class="n">color</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">=</span> <span class="s">&quot;#</span><span class="si">$</span><span class="p">(</span><span class="n">hex</span><span class="p">(</span><span class="n">cm</span><span class="p">[</span><span class="n">v</span> <span class="o">+</span> <span class="n">floor</span><span class="p">(</span><span class="kt">Int</span><span class="p">,</span> <span class="n">nv</span><span class="p">(</span><span class="n">h</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)]))</span><span class="s">&quot;</span> <span class="c">#&quot;gray$(100 - 3v)&quot;</span>
+<span class="n">ϕ</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">=</span> <span class="k">begin</span>
+    <span class="n">d</span><span class="o">=</span><span class="kt">Dict</span><span class="p">{</span><span class="kt">Symbol</span><span class="p">,</span><span class="kt">Symbol</span><span class="p">}(</span><span class="o">:</span><span class="n">Susceptible</span><span class="o">=&gt;:</span><span class="kt">Symbol</span><span class="p">,</span>
+        <span class="o">:</span><span class="n">Infected</span><span class="o">=&gt;:</span><span class="kt">Symbol</span><span class="p">,</span>
+        <span class="o">:</span><span class="n">Recovered</span><span class="o">=&gt;:</span><span class="kt">Symbol</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">val</span>
+<span class="k">end</span>
+
+<span class="k">for</span> <span class="n">v</span> <span class="kp">in</span> <span class="n">vertices</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">vname</span> <span class="o">=</span> <span class="n">ϕ</span><span class="o">.</span><span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="n">v</span><span class="p">,</span><span class="o">:</span><span class="n">label</span><span class="p">])</span>
+    <span class="k">try</span>
+        <span class="n">vh</span> <span class="o">=</span> <span class="n">h</span><span class="p">[</span><span class="n">vname</span><span class="p">,</span> <span class="o">:</span><span class="n">label</span><span class="p">]</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">vprops</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="o">:</span><span class="n">fillcolor</span><span class="p">]</span><span class="o">=</span><span class="n">color</span><span class="p">(</span><span class="n">vh</span><span class="p">)</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">vprops</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="o">:</span><span class="n">style</span><span class="p">]</span><span class="o">=</span><span class="s">&quot;filled&quot;</span>
+    <span class="k">catch</span> <span class="n">ex</span>
+        <span class="nd">@warn</span> <span class="n">ex</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-julia"><pre><span></span><span class="n">draw</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s">&quot;typegraphmorphism.dot&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+<div class="output_svg output_subarea ">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.40.1 (20161225.0304)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="888pt" height="740pt"
+ viewBox="0.00 0.00 888.00 740.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 736)">
+<title>G</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-736 884,-736 884,4 -4,4"/>
+<!-- 1 -->
+<g id="node1" class="node">
+<title>1</title>
+<ellipse fill="#fd806e" stroke="#fd806e" cx="561" cy="-627" rx="107.781" ry="18"/>
+<text text-anchor="middle" x="561" y="-623.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel, :Susceptible)</text>
+</g>
+<!-- 2 -->
+<g id="node2" class="node">
+<title>2</title>
+<ellipse fill="#ff9987" stroke="#ff9987" cx="444" cy="-540" rx="29.4969" ry="18"/>
+<text text-anchor="middle" x="444" y="-536.3" font-family="Times,serif" font-size="14.00" fill="#000000">Int64</text>
+</g>
+<!-- 1&#45;&gt;2 -->
+<g id="edge1" class="edge">
+<title>1&#45;&gt;2</title>
+<path fill="none" stroke="#000000" d="M537.3233,-609.3943C518.1595,-595.1442 491.1567,-575.0652 471.1247,-560.1697"/>
+<polygon fill="#000000" stroke="#000000" points="473.1227,-557.2937 463.0095,-554.1353 468.9457,-562.911 473.1227,-557.2937"/>
+<text text-anchor="middle" x="524.5" y="-579.8" font-family="Times,serif" font-size="14.00" fill="#000000">count</text>
+</g>
+<!-- 4 -->
+<g id="node4" class="node">
+<title>4</title>
+<ellipse fill="#ffc5b7" stroke="#ffc5b7" cx="667" cy="-18" rx="37.8943" ry="18"/>
+<text text-anchor="middle" x="667" y="-14.3" font-family="Times,serif" font-size="14.00" fill="#000000">Float64</text>
+</g>
+<!-- 1&#45;&gt;4 -->
+<g id="edge2" class="edge">
+<title>1&#45;&gt;4</title>
+<path fill="none" stroke="#000000" d="M637.2782,-614.2449C707.2232,-600.3211 800,-575.2149 800,-540 800,-540 800,-540 800,-105 800,-61.942 750.5774,-39.0503 711.9872,-27.7389"/>
+<polygon fill="#000000" stroke="#000000" points="712.5143,-24.254 701.9442,-24.9777 710.6586,-31.0035 712.5143,-24.254"/>
+<text text-anchor="middle" x="824.5" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">stateload</text>
+</g>
+<!-- 7 -->
+<g id="node7" class="node">
+<title>7</title>
+<ellipse fill="#ffe7e1" stroke="#dff1fc" cx="276" cy="-453" rx="133.7763" ry="18"/>
+<text text-anchor="middle" x="276" y="-449.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel, :Int64, :Susceptible)</text>
+</g>
+<!-- 2&#45;&gt;7 -->
+<g id="edge3" class="edge">
+<title>2&#45;&gt;7</title>
+<path fill="none" stroke="#000000" d="M421.3428,-528.2668C395.1453,-514.7002 351.4448,-492.0696 318.7899,-475.1591"/>
+<polygon fill="#000000" stroke="#000000" points="320.3857,-472.044 309.8962,-470.5534 317.1667,-478.26 320.3857,-472.044"/>
+<text text-anchor="middle" x="378" y="-492.8" font-family="Times,serif" font-size="14.00" fill="#000000">π2</text>
+</g>
+<!-- 10 -->
+<g id="node10" class="node">
+<title>10</title>
+<ellipse fill="#ffe7e1" stroke="#9bcdf2" cx="226" cy="-279" rx="122.3786" ry="18"/>
+<text text-anchor="middle" x="226" y="-275.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel, :Int64, :Infected)</text>
+</g>
+<!-- 2&#45;&gt;10 -->
+<g id="edge4" class="edge">
+<title>2&#45;&gt;10</title>
+<path fill="none" stroke="#000000" d="M442.3866,-521.992C439.8578,-500.3133 433.6357,-463.2948 419,-435 407.5701,-412.9028 357.6239,-348.0808 311,-315 302.8638,-309.2272 293.6585,-304.1332 284.3852,-299.7293"/>
+<polygon fill="#000000" stroke="#000000" points="285.6811,-296.4744 275.1262,-295.5558 282.8046,-302.856 285.6811,-296.4744"/>
+<text text-anchor="middle" x="415" y="-405.8" font-family="Times,serif" font-size="14.00" fill="#000000">π2</text>
+</g>
+<!-- 13 -->
+<g id="node13" class="node">
+<title>13</title>
+<ellipse fill="#ffe7e1" stroke="#5295d6" cx="217" cy="-105" rx="130.777" ry="18"/>
+<text text-anchor="middle" x="217" y="-101.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel, :Int64, :Recovered)</text>
+</g>
+<!-- 2&#45;&gt;13 -->
+<g id="edge5" class="edge">
+<title>2&#45;&gt;13</title>
+<path fill="none" stroke="#000000" d="M421.4815,-528.1688C416.4816,-525.873 411.1386,-523.6661 406,-522 288.5848,-483.9313 235.3461,-539.9987 133,-471 68.0347,-427.2024 38,-400.85 38,-322.5 38,-322.5 38,-322.5 38,-192 38,-166.1939 98.9421,-140.883 149.7083,-124.2753"/>
+<polygon fill="#000000" stroke="#000000" points="150.9241,-127.5611 159.378,-121.175 148.7868,-120.8954 150.9241,-127.5611"/>
+<text text-anchor="middle" x="47" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">π2</text>
+</g>
+<!-- 3 -->
+<g id="node3" class="node">
+<title>3</title>
+<ellipse fill="#ffb0a0" stroke="#ffb0a0" cx="366" cy="-627" rx="62.2891" ry="18"/>
+<text text-anchor="middle" x="366" y="-623.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel,)</text>
+</g>
+<!-- 3&#45;&gt;2 -->
+<g id="edge6" class="edge">
+<title>3&#45;&gt;2</title>
+<path fill="none" stroke="#000000" d="M381.7845,-609.3943C393.6534,-596.1559 410.0325,-577.8868 423.0059,-563.4165"/>
+<polygon fill="#000000" stroke="#000000" points="425.7431,-565.6066 429.8126,-555.8244 420.5311,-560.9337 425.7431,-565.6066"/>
+<text text-anchor="middle" x="424.5" y="-579.8" font-family="Times,serif" font-size="14.00" fill="#000000">count</text>
+</g>
+<!-- 12 -->
+<g id="node12" class="node">
+<title>12</title>
+<ellipse fill="#ffd7cd" stroke="#6aaae3" cx="286" cy="-540" rx="31.3957" ry="18"/>
+<text text-anchor="middle" x="286" y="-536.3" font-family="Times,serif" font-size="14.00" fill="#000000">Array</text>
+</g>
+<!-- 3&#45;&gt;12 -->
+<g id="edge7" class="edge">
+<title>3&#45;&gt;12</title>
+<path fill="none" stroke="#000000" d="M339.153,-610.7419C331.1334,-605.1122 322.7021,-598.3511 316,-591 309.463,-583.83 303.6659,-575.0082 298.9525,-566.7296"/>
+<polygon fill="#000000" stroke="#000000" points="301.9307,-564.8779 294.1098,-557.7306 295.7666,-568.1951 301.9307,-564.8779"/>
+<text text-anchor="middle" x="339" y="-579.8" font-family="Times,serif" font-size="14.00" fill="#000000">describe</text>
+</g>
+<!-- 14 -->
+<g id="node14" class="node">
+<title>14</title>
+<ellipse fill="#b3dbf6" stroke="#3d7dc2" cx="366" cy="-714" rx="51.9908" ry="18"/>
+<text text-anchor="middle" x="366" y="-710.3" font-family="Times,serif" font-size="14.00" fill="#000000">StateModel</text>
+</g>
+<!-- 3&#45;&gt;14 -->
+<g id="edge8" class="edge">
+<title>3&#45;&gt;14</title>
+<path fill="none" stroke="#000000" d="M350.9604,-644.9425C344.7445,-654.5099 339.6767,-666.6258 343,-678 343.936,-681.2036 345.2536,-684.3932 346.7898,-687.4749"/>
+<polygon fill="#000000" stroke="#000000" points="343.8568,-689.3949 351.8907,-696.3019 349.9176,-685.8924 343.8568,-689.3949"/>
+<text text-anchor="middle" x="355.5" y="-666.8" font-family="Times,serif" font-size="14.00" fill="#000000">tick!</text>
+</g>
+<!-- 15 -->
+<g id="node15" class="node">
+<title>15</title>
+<ellipse fill="#82bdec" stroke="#2a64a6" cx="366" cy="-540" rx="31.3957" ry="18"/>
+<text text-anchor="middle" x="366" y="-536.3" font-family="Times,serif" font-size="14.00" fill="#000000">Tuple</text>
+</g>
+<!-- 3&#45;&gt;15 -->
+<g id="edge9" class="edge">
+<title>3&#45;&gt;15</title>
+<path fill="none" stroke="#000000" d="M366,-608.9735C366,-597.1918 366,-581.5607 366,-568.1581"/>
+<polygon fill="#000000" stroke="#000000" points="369.5001,-568.0033 366,-558.0034 362.5001,-568.0034 369.5001,-568.0033"/>
+<text text-anchor="middle" x="378.5" y="-579.8" font-family="Times,serif" font-size="14.00" fill="#000000">tick!</text>
+</g>
+<!-- 5 -->
+<g id="node5" class="node">
+<title>5</title>
+<ellipse fill="#fd806e" stroke="#ffd7cd" cx="500" cy="-279" rx="96.3833" ry="18"/>
+<text text-anchor="middle" x="500" y="-275.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel, :Infected)</text>
+</g>
+<!-- 5&#45;&gt;2 -->
+<g id="edge10" class="edge">
+<title>5&#45;&gt;2</title>
+<path fill="none" stroke="#000000" d="M496.1945,-297.0934C488.1421,-335.3217 468.743,-427.1172 452,-504 451.4197,-506.6646 450.8111,-509.4391 450.1996,-512.2132"/>
+<polygon fill="#000000" stroke="#000000" points="446.7637,-511.541 448.0178,-522.0614 453.598,-513.0551 446.7637,-511.541"/>
+<text text-anchor="middle" x="488.5" y="-405.8" font-family="Times,serif" font-size="14.00" fill="#000000">count</text>
+</g>
+<!-- 5&#45;&gt;4 -->
+<g id="edge11" class="edge">
+<title>5&#45;&gt;4</title>
+<path fill="none" stroke="#000000" d="M494.7573,-260.668C487.9555,-233.3364 478.8582,-180.8525 496,-141 519.8619,-85.5241 584.0935,-50.4379 626.6835,-32.5201"/>
+<polygon fill="#000000" stroke="#000000" points="628.2686,-35.6539 636.2129,-28.644 625.6311,-29.1698 628.2686,-35.6539"/>
+<text text-anchor="middle" x="520.5" y="-144.8" font-family="Times,serif" font-size="14.00" fill="#000000">stateload</text>
+</g>
+<!-- 6 -->
+<g id="node6" class="node">
+<title>6</title>
+<ellipse fill="#fd806e" stroke="#ffe7e1" cx="667" cy="-105" rx="104.7816" ry="18"/>
+<text text-anchor="middle" x="667" y="-101.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel, :Recovered)</text>
+</g>
+<!-- 6&#45;&gt;2 -->
+<g id="edge12" class="edge">
+<title>6&#45;&gt;2</title>
+<path fill="none" stroke="#000000" d="M665.6681,-123.3193C664.5045,-140.9178 663,-168.2614 663,-192 663,-453 663,-453 663,-453 663,-491.463 544.8514,-520.3596 482.1146,-532.9923"/>
+<polygon fill="#000000" stroke="#000000" points="481.3166,-529.5822 472.1821,-534.9498 482.6701,-536.4501 481.3166,-529.5822"/>
+<text text-anchor="middle" x="678.5" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">count</text>
+</g>
+<!-- 6&#45;&gt;4 -->
+<g id="edge13" class="edge">
+<title>6&#45;&gt;4</title>
+<path fill="none" stroke="#000000" d="M667,-86.9735C667,-75.1918 667,-59.5607 667,-46.1581"/>
+<polygon fill="#000000" stroke="#000000" points="670.5001,-46.0033 667,-36.0034 663.5001,-46.0034 670.5001,-46.0033"/>
+<text text-anchor="middle" x="691.5" y="-57.8" font-family="Times,serif" font-size="14.00" fill="#000000">stateload</text>
+</g>
+<!-- 8 -->
+<g id="node8" class="node">
+<title>8</title>
+<ellipse fill="#dff1fc" stroke="#c9e7f9" cx="297" cy="-18" rx="51.1914" ry="18"/>
+<text text-anchor="middle" x="297" y="-14.3" font-family="Times,serif" font-size="14.00" fill="#000000">Susceptible</text>
+</g>
+<!-- 7&#45;&gt;8 -->
+<g id="edge14" class="edge">
+<title>7&#45;&gt;8</title>
+<path fill="none" stroke="#000000" d="M318.1192,-435.8979C345.4485,-421.7073 376,-398.5617 376,-366 376,-366 376,-366 376,-105 376,-77.3855 353.9162,-54.6514 333.1008,-39.3564"/>
+<polygon fill="#000000" stroke="#000000" points="334.8384,-36.3016 324.6304,-33.4648 330.8413,-42.0482 334.8384,-36.3016"/>
+<text text-anchor="middle" x="402" y="-231.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 9 -->
+<g id="node9" class="node">
+<title>9</title>
+<ellipse fill="#dff1fc" stroke="#b3dbf6" cx="274" cy="-366" rx="39.7935" ry="18"/>
+<text text-anchor="middle" x="274" y="-362.3" font-family="Times,serif" font-size="14.00" fill="#000000">Infected</text>
+</g>
+<!-- 7&#45;&gt;9 -->
+<g id="edge15" class="edge">
+<title>7&#45;&gt;9</title>
+<path fill="none" stroke="#000000" d="M275.5856,-434.9735C275.3148,-423.1918 274.9554,-407.5607 274.6473,-394.1581"/>
+<polygon fill="#000000" stroke="#000000" points="278.1429,-393.9202 274.4139,-384.0034 271.1447,-394.0812 278.1429,-393.9202"/>
+<text text-anchor="middle" x="302" y="-405.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 8&#45;&gt;1 -->
+<g id="edge16" class="edge">
+<title>8&#45;&gt;1</title>
+<path fill="none" stroke="#000000" d="M329.9543,-32.056C378.5234,-52.649 472.3026,-91.9422 553,-123 575.0422,-131.4833 588.3293,-122.4906 603,-141 653.4408,-204.6392 624,-241.2952 624,-322.5 624,-540 624,-540 624,-540 624,-564.4193 607.5168,-586.6198 591.413,-602.4825"/>
+<polygon fill="#000000" stroke="#000000" points="589.0215,-599.9269 584.1011,-609.3099 593.7989,-605.0432 589.0215,-599.9269"/>
+<text text-anchor="middle" x="632" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">π2</text>
+</g>
+<!-- 8&#45;&gt;7 -->
+<g id="edge17" class="edge">
+<title>8&#45;&gt;7</title>
+<path fill="none" stroke="#000000" d="M250.5903,-25.9681C192.3823,-37.0168 97.6729,-58.8503 77,-87 21.5516,-162.5022 51.6376,-213.965 95,-297 126.3738,-357.0779 191.4231,-404.011 234.386,-430.1076"/>
+<polygon fill="#000000" stroke="#000000" points="232.8161,-433.2464 243.1985,-435.3574 236.3986,-427.2326 232.8161,-433.2464"/>
+<text text-anchor="middle" x="76" y="-231.8" font-family="Times,serif" font-size="14.00" fill="#000000">π3</text>
+</g>
+<!-- 9&#45;&gt;5 -->
+<g id="edge18" class="edge">
+<title>9&#45;&gt;5</title>
+<path fill="none" stroke="#000000" d="M304.4794,-354.2668C341.297,-340.0937 403.8129,-316.0278 448.2372,-298.9264"/>
+<polygon fill="#000000" stroke="#000000" points="449.6316,-302.1401 457.7066,-295.2811 447.1168,-295.6074 449.6316,-302.1401"/>
+<text text-anchor="middle" x="408" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">π2</text>
+</g>
+<!-- 9&#45;&gt;10 -->
+<g id="edge19" class="edge">
+<title>9&#45;&gt;10</title>
+<path fill="none" stroke="#000000" d="M250.1704,-351.4301C242.8001,-345.691 235.4546,-338.4377 231,-330 227.402,-323.1848 225.6664,-315.1423 224.9449,-307.4835"/>
+<polygon fill="#000000" stroke="#000000" points="228.4389,-307.268 224.5098,-297.4287 221.4455,-307.5707 228.4389,-307.268"/>
+<text text-anchor="middle" x="239" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">π3</text>
+</g>
+<!-- 10&#45;&gt;9 -->
+<g id="edge20" class="edge">
+<title>10&#45;&gt;9</title>
+<path fill="none" stroke="#000000" d="M236.8298,-297.2306C240.1429,-302.8965 243.7649,-309.1822 247,-315 251.4093,-322.9295 256.0779,-331.6311 260.2705,-339.5663"/>
+<polygon fill="#000000" stroke="#000000" points="257.1811,-341.2114 264.9295,-348.4372 263.3783,-337.9565 257.1811,-341.2114"/>
+<text text-anchor="middle" x="281" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 11 -->
+<g id="node11" class="node">
+<title>11</title>
+<ellipse fill="#dff1fc" stroke="#82bdec" cx="245" cy="-192" rx="48.1917" ry="18"/>
+<text text-anchor="middle" x="245" y="-188.3" font-family="Times,serif" font-size="14.00" fill="#000000">Recovered</text>
+</g>
+<!-- 10&#45;&gt;11 -->
+<g id="edge21" class="edge">
+<title>10&#45;&gt;11</title>
+<path fill="none" stroke="#000000" d="M229.9368,-260.9735C232.5098,-249.1918 235.9235,-233.5607 238.8505,-220.1581"/>
+<polygon fill="#000000" stroke="#000000" points="242.3539,-220.5199 241.0682,-210.0034 235.5151,-219.0263 242.3539,-220.5199"/>
+<text text-anchor="middle" x="263" y="-231.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 11&#45;&gt;6 -->
+<g id="edge22" class="edge">
+<title>11&#45;&gt;6</title>
+<path fill="none" stroke="#000000" d="M293.2007,-190.5893C353.8418,-187.8419 460.7291,-179.7576 549,-156 575.2111,-148.9454 603.1512,-137.0825 625.2612,-126.5724"/>
+<polygon fill="#000000" stroke="#000000" points="626.882,-129.6763 634.3579,-122.1688 623.832,-123.3757 626.882,-129.6763"/>
+<text text-anchor="middle" x="600" y="-144.8" font-family="Times,serif" font-size="14.00" fill="#000000">π2</text>
+</g>
+<!-- 11&#45;&gt;13 -->
+<g id="edge23" class="edge">
+<title>11&#45;&gt;13</title>
+<path fill="none" stroke="#000000" d="M226.3847,-175.3649C221.3872,-169.7639 216.6408,-163.1137 214,-156 211.3261,-148.7971 210.8053,-140.6293 211.2866,-132.9744"/>
+<polygon fill="#000000" stroke="#000000" points="214.7686,-133.3318 212.456,-122.9924 207.8162,-132.5172 214.7686,-133.3318"/>
+<text text-anchor="middle" x="222" y="-144.8" font-family="Times,serif" font-size="14.00" fill="#000000">π3</text>
+</g>
+<!-- 13&#45;&gt;8 -->
+<g id="edge24" class="edge">
+<title>13&#45;&gt;8</title>
+<path fill="none" stroke="#000000" d="M233.5761,-86.9735C245.3152,-74.2072 261.2102,-56.9214 274.1509,-42.8484"/>
+<polygon fill="#000000" stroke="#000000" points="276.7987,-45.1398 280.9911,-35.4097 271.646,-40.4016 276.7987,-45.1398"/>
+<text text-anchor="middle" x="288" y="-57.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 13&#45;&gt;11 -->
+<g id="edge25" class="edge">
+<title>13&#45;&gt;11</title>
+<path fill="none" stroke="#000000" d="M223.8287,-123.2401C225.8847,-128.9063 228.0984,-135.1898 230,-141 232.4473,-148.4776 234.9281,-156.6306 237.1486,-164.18"/>
+<polygon fill="#000000" stroke="#000000" points="233.8433,-165.3491 239.9878,-173.9803 240.5669,-163.4013 233.8433,-165.3491"/>
+<text text-anchor="middle" x="261" y="-144.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 14&#45;&gt;1 -->
+<g id="edge26" class="edge">
+<title>14&#45;&gt;1</title>
+<path fill="none" stroke="#000000" d="M398.2003,-699.6337C429.6787,-685.5895 477.9637,-664.047 513.7828,-648.0661"/>
+<polygon fill="#000000" stroke="#000000" points="515.3596,-651.1952 523.0659,-643.9244 512.5075,-644.8026 515.3596,-651.1952"/>
+<text text-anchor="middle" x="483" y="-666.8" font-family="Times,serif" font-size="14.00" fill="#000000">π1</text>
+</g>
+<!-- 14&#45;&gt;3 -->
+<g id="edge27" class="edge">
+<title>14&#45;&gt;3</title>
+<path fill="none" stroke="#000000" d="M367.214,-695.6941C367.537,-690.0251 367.8402,-683.7566 368,-678 368.2015,-670.7396 368.069,-662.9 367.7956,-655.5964"/>
+<polygon fill="#000000" stroke="#000000" points="371.2825,-655.234 367.3168,-645.4094 364.2902,-655.5627 371.2825,-655.234"/>
+<text text-anchor="middle" x="376" y="-666.8" font-family="Times,serif" font-size="14.00" fill="#000000">π1</text>
+</g>
+<!-- 14&#45;&gt;5 -->
+<g id="edge28" class="edge">
+<title>14&#45;&gt;5</title>
+<path fill="none" stroke="#000000" d="M417.7219,-711.5807C513.5421,-705.6775 709,-686.3609 709,-627 709,-627 709,-627 709,-366 709,-342.4948 712.3146,-330.8965 695,-315 680.3577,-301.5569 639.2466,-292.9166 598.5257,-287.4815"/>
+<polygon fill="#000000" stroke="#000000" points="598.8382,-283.9931 588.4761,-286.2015 597.9538,-290.937 598.8382,-283.9931"/>
+<text text-anchor="middle" x="717" y="-492.8" font-family="Times,serif" font-size="14.00" fill="#000000">π1</text>
+</g>
+<!-- 14&#45;&gt;6 -->
+<g id="edge29" class="edge">
+<title>14&#45;&gt;6</title>
+<path fill="none" stroke="#000000" d="M416.9544,-710.408C543.8778,-700.781 864,-672.0358 864,-627 864,-627 864,-627 864,-192 864,-163.5485 794.3712,-138.1768 737.9041,-122.279"/>
+<polygon fill="#000000" stroke="#000000" points="738.8229,-118.9018 728.2522,-119.6162 736.9612,-125.6497 738.8229,-118.9018"/>
+<text text-anchor="middle" x="872" y="-405.8" font-family="Times,serif" font-size="14.00" fill="#000000">π1</text>
+</g>
+<!-- 14&#45;&gt;7 -->
+<g id="edge30" class="edge">
+<title>14&#45;&gt;7</title>
+<path fill="none" stroke="#000000" d="M345.1755,-697.0808C315.1795,-671.0361 261.6882,-617.8234 246,-558 239.0354,-531.4421 249.5512,-501.3298 259.9988,-480.1837"/>
+<polygon fill="#000000" stroke="#000000" points="263.1941,-481.6265 264.7312,-471.1438 256.9924,-478.3799 263.1941,-481.6265"/>
+<text text-anchor="middle" x="267" y="-579.8" font-family="Times,serif" font-size="14.00" fill="#000000">π1</text>
+</g>
+<!-- 14&#45;&gt;10 -->
+<g id="edge31" class="edge">
+<title>14&#45;&gt;10</title>
+<path fill="none" stroke="#000000" d="M315.4859,-709.3044C232.3989,-700.1688 76,-676.4102 76,-627 76,-627 76,-627 76,-366 76,-330.5021 107.8231,-309.2476 142.1538,-296.6464"/>
+<polygon fill="#000000" stroke="#000000" points="143.5516,-299.8674 151.8789,-293.3171 141.2843,-293.2447 143.5516,-299.8674"/>
+<text text-anchor="middle" x="84" y="-492.8" font-family="Times,serif" font-size="14.00" fill="#000000">π1</text>
+</g>
+<!-- 14&#45;&gt;13 -->
+<g id="edge32" class="edge">
+<title>14&#45;&gt;13</title>
+<path fill="none" stroke="#000000" d="M313.9498,-712.3992C212.9037,-707.8698 0,-690.761 0,-627 0,-627 0,-627 0,-192 0,-162.0104 72.3057,-137.6543 133.4416,-122.4206"/>
+<polygon fill="#000000" stroke="#000000" points="134.6464,-125.7295 143.5337,-119.9618 132.9894,-118.9285 134.6464,-125.7295"/>
+<text text-anchor="middle" x="8" y="-405.8" font-family="Times,serif" font-size="14.00" fill="#000000">π1</text>
+</g>
+</g>
+</svg>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Note that the type Symbol does not appear in the second program at all, but instead the types Susceptible, Infected, and Recovered play the role of the Symbol vertex in this new graph. The graph is bigger and harder to visualize, but it contains the same structure. You can chack that for every edge in the $g$ there is an edge in $h$ that has the same color vertices as endpoints.</p>
+<p>In this new model the structure of the agents states is readily apparant in the type system.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-julia"><pre><span></span><span class="n">tedges</span> <span class="o">=</span> <span class="n">filter</span><span class="p">((</span><span class="n">p</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="o">:</span><span class="n">label</span><span class="p">]</span><span class="o">==</span><span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">transition</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">g</span><span class="o">.</span><span class="n">eprops</span><span class="p">)</span>
+<span class="n">tv</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="p">(</span><span class="n">keys</span><span class="p">(</span><span class="n">tedges</span><span class="p">))</span> <span class="o">∪</span> <span class="n">dst</span><span class="o">.</span><span class="p">(</span><span class="n">keys</span><span class="p">(</span><span class="n">tedges</span><span class="p">))</span>
+<span class="n">DFA</span> <span class="o">=</span> <span class="n">g</span><span class="p">[</span><span class="n">tv</span><span class="p">]</span>
+<span class="n">draw</span><span class="p">(</span><span class="n">DFA</span><span class="p">,</span> <span class="s">&quot;type_DFA.dot&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+<div class="output_svg output_subarea ">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.40.1 (20161225.0304)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg width="348pt" height="479pt"
+ viewBox="0.00 0.00 348.00 479.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 475)">
+<title>G</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-475 344,-475 344,4 -4,4"/>
+<!-- 1 -->
+<g id="node1" class="node">
+<title>1</title>
+<ellipse fill="#ffe7e1" stroke="#9bcdf2" cx="160" cy="-453" rx="122.3786" ry="18"/>
+<text text-anchor="middle" x="160" y="-449.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel, :Int64, :Infected)</text>
+</g>
+<!-- 4 -->
+<g id="node4" class="node">
+<title>4</title>
+<ellipse fill="#dff1fc" stroke="#b3dbf6" cx="162" cy="-18" rx="39.7935" ry="18"/>
+<text text-anchor="middle" x="162" y="-14.3" font-family="Times,serif" font-size="14.00" fill="#000000">Infected</text>
+</g>
+<!-- 1&#45;&gt;4 -->
+<g id="edge1" class="edge">
+<title>1&#45;&gt;4</title>
+<path fill="none" stroke="#000000" d="M78.5938,-439.4408C39.068,-427.7096 0,-405.9976 0,-366 0,-366 0,-366 0,-105 0,-52.9917 65.6057,-31.9443 113.3175,-23.5143"/>
+<polygon fill="#000000" stroke="#000000" points="113.8921,-26.9669 123.197,-21.9003 112.7635,-20.0585 113.8921,-26.9669"/>
+<text text-anchor="middle" x="26" y="-231.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 6 -->
+<g id="node6" class="node">
+<title>6</title>
+<ellipse fill="#dff1fc" stroke="#82bdec" cx="160" cy="-366" rx="48.1917" ry="18"/>
+<text text-anchor="middle" x="160" y="-362.3" font-family="Times,serif" font-size="14.00" fill="#000000">Recovered</text>
+</g>
+<!-- 1&#45;&gt;6 -->
+<g id="edge2" class="edge">
+<title>1&#45;&gt;6</title>
+<path fill="none" stroke="#000000" d="M160,-434.9735C160,-423.1918 160,-407.5607 160,-394.1581"/>
+<polygon fill="#000000" stroke="#000000" points="163.5001,-394.0033 160,-384.0034 156.5001,-394.0034 163.5001,-394.0033"/>
+<text text-anchor="middle" x="186" y="-405.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 2 -->
+<g id="node2" class="node">
+<title>2</title>
+<ellipse fill="#ffe7e1" stroke="#5295d6" cx="160" cy="-279" rx="130.777" ry="18"/>
+<text text-anchor="middle" x="160" y="-275.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel, :Int64, :Recovered)</text>
+</g>
+<!-- 5 -->
+<g id="node5" class="node">
+<title>5</title>
+<ellipse fill="#dff1fc" stroke="#c9e7f9" cx="160" cy="-192" rx="51.1914" ry="18"/>
+<text text-anchor="middle" x="160" y="-188.3" font-family="Times,serif" font-size="14.00" fill="#000000">Susceptible</text>
+</g>
+<!-- 2&#45;&gt;5 -->
+<g id="edge3" class="edge">
+<title>2&#45;&gt;5</title>
+<path fill="none" stroke="#000000" d="M160,-260.9735C160,-249.1918 160,-233.5607 160,-220.1581"/>
+<polygon fill="#000000" stroke="#000000" points="163.5001,-220.0033 160,-210.0034 156.5001,-220.0034 163.5001,-220.0033"/>
+<text text-anchor="middle" x="186" y="-231.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 2&#45;&gt;6 -->
+<g id="edge4" class="edge">
+<title>2&#45;&gt;6</title>
+<path fill="none" stroke="#000000" d="M160,-297.0034C160,-308.7801 160,-324.4102 160,-337.8156"/>
+<polygon fill="#000000" stroke="#000000" points="156.5001,-337.9735 160,-347.9735 163.5001,-337.9736 156.5001,-337.9735"/>
+<text text-anchor="middle" x="186" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 3 -->
+<g id="node3" class="node">
+<title>3</title>
+<ellipse fill="#ffe7e1" stroke="#dff1fc" cx="162" cy="-105" rx="133.7763" ry="18"/>
+<text text-anchor="middle" x="162" y="-101.3" font-family="Times,serif" font-size="14.00" fill="#000000">(:StateModel, :Int64, :Susceptible)</text>
+</g>
+<!-- 3&#45;&gt;4 -->
+<g id="edge5" class="edge">
+<title>3&#45;&gt;4</title>
+<path fill="none" stroke="#000000" d="M162,-86.9735C162,-75.1918 162,-59.5607 162,-46.1581"/>
+<polygon fill="#000000" stroke="#000000" points="165.5001,-46.0033 162,-36.0034 158.5001,-46.0034 165.5001,-46.0033"/>
+<text text-anchor="middle" x="188" y="-57.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 3&#45;&gt;5 -->
+<g id="edge6" class="edge">
+<title>3&#45;&gt;5</title>
+<path fill="none" stroke="#000000" d="M161.5861,-123.0034C161.3154,-134.7801 160.9561,-150.4102 160.6479,-163.8156"/>
+<polygon fill="#000000" stroke="#000000" points="157.1452,-163.8957 160.4144,-173.9735 164.1434,-164.0567 157.1452,-163.8957"/>
+<text text-anchor="middle" x="188" y="-144.8" font-family="Times,serif" font-size="14.00" fill="#000000">transition</text>
+</g>
+<!-- 4&#45;&gt;1 -->
+<g id="edge7" class="edge">
+<title>4&#45;&gt;1</title>
+<path fill="none" stroke="#000000" d="M200.803,-21.9003C248.7293,-29.1067 324,-49.2924 324,-105 324,-366 324,-366 324,-366 324,-403.2791 290.5219,-424.6315 253.8174,-436.8392"/>
+<polygon fill="#000000" stroke="#000000" points="252.4423,-433.6007 243.9217,-439.8976 254.5093,-440.2886 252.4423,-433.6007"/>
+<text text-anchor="middle" x="332" y="-231.8" font-family="Times,serif" font-size="14.00" fill="#000000">π3</text>
+</g>
+<!-- 5&#45;&gt;3 -->
+<g id="edge8" class="edge">
+<title>5&#45;&gt;3</title>
+<path fill="none" stroke="#000000" d="M147.616,-174.3263C142.3045,-164.6293 137.9423,-152.3103 141,-141 141.8049,-138.0227 142.924,-135.0388 144.2303,-132.1331"/>
+<polygon fill="#000000" stroke="#000000" points="147.3576,-133.7055 148.8853,-123.2213 141.1531,-130.4645 147.3576,-133.7055"/>
+<text text-anchor="middle" x="149" y="-144.8" font-family="Times,serif" font-size="14.00" fill="#000000">π3</text>
+</g>
+<!-- 6&#45;&gt;2 -->
+<g id="edge9" class="edge">
+<title>6&#45;&gt;2</title>
+<path fill="none" stroke="#000000" d="M147.9239,-348.4461C144.697,-342.8077 141.65,-336.3675 140,-330 137.9535,-322.1025 139.5242,-313.7713 142.5176,-306.1838"/>
+<polygon fill="#000000" stroke="#000000" points="145.7258,-307.5884 146.9051,-297.0594 139.4172,-304.5549 145.7258,-307.5884"/>
+<text text-anchor="middle" x="148" y="-318.8" font-family="Times,serif" font-size="14.00" fill="#000000">π3</text>
+</g>
+</g>
+</svg>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>By contracting the edges labeled $\pi_3$ you identify a minor of 
+the typegraph isomorphic to the discrete finite automata or 
+finite state machine representation of the agents in our agent based simulation.</p>
+<p>Since the typegraph contains this information, we can say that the julia compiler "understands" 
+a semantic feature of the model. We can introduce compile time logic based on these properties of
+the model. ANy changes to the underlying code that changed the state space of the agents, or the 
+possible transitions they undergo would affect the type graph of the model.</p>
+<p>For the model version that used :Symbols, or categorical states, the julia type system is blissfully 
+ignorant of the relationships between the states. However once we introduce types to the model, the 
+compiler is able to represent the structure of the model. Any changes to the model will either preserve 
+or disrupt this type graph and we will be able to identify and quantify that change to the structure of the model.</p>
+<p>This example is an instance of a large phenomenon that we hope to advance in modeling.
+Programs that implement models can get more out of the compiler if they add more information.
+In this case we declared the states of our agents as types and the compiler was able to infer
+the state transition graph from the our code.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Conclusions">Conclusions<a class="anchor-link" href="#Conclusions">&#182;</a></h2><p>We can see from the examples presented here that similar models produce similar type graphs. In this case we have two programs that impement the same model and have homomorphic type graphs. This homomorphism is natural in the sense that every vertex that appears in both graphs satisfies $\phi(v) = v$. Adding information to the type system in the julia program allows the type graph of the model to understand more of the program semantics. This powerful insight can teach the machines to reason about the behaviour of computational models.</p>
+
+</div>
+</div>
 </div>
     </div>
   </div>
