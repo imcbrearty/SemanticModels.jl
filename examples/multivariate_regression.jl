@@ -229,6 +229,15 @@ poly(m)
 @show T₁ = Product((one(Pow), zero(Pow)))
 @show T₂ = Product((zero(Pow), one(Pow)))
 
+# Some Checks that we get what is expected.
+
+m′ = @show (T₁^2 ∘ T₂^3)(deepcopy(m))
+p = poly(m)
+p′ = poly(m′)
+@assert p′.args[2].args[3].args[3] == p.args[2].args[3].args[3] + 2
+@assert p′.args[3].args[3].args[3] == p.args[3].args[3].args[3]+3
+p′
+
 # ## Exploring the Orbits
 #
 # We use the Levenberg Marquardt algorithm for general least squares problems in data analysis. The goal is to fix a model class and find the best coefficients for that class. Our algebraic representation allows us to have a similar treatment of model class (in this case the exponents $i,j$ in our formula). We can sample from the orbits of the group when applied to the model and solve for the best coefficients in order to find the best model class.
