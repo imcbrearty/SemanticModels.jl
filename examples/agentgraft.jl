@@ -95,13 +95,17 @@ end
 # Some utilities for manipulating functions at a higher level than expressions.
 
 # +
-
 struct Func end
 
 function push!(::Func, func::Expr, ex::Expr)
     push!(bodyblock(func), ex)
 end
 # -
+
+m.expr
+
+welp = findfunc([m.expr, quote function f(x) return x end; main(x,y) = return y; x = 2 end], :main)
+welp
 
 # ## Population Growth
 #
@@ -110,11 +114,14 @@ end
 # <img src="https://docs.google.com/drawings/d/e/2PACX-1vRfLcbPPaQq6jmxheWApqidYte8FxK7p0Ebs2EyW2pY3ougNh5YiMjA0NbRMuGAIT5pD02WNEoOfdCd/pub?w=1005&amp;h=247">
 
 println("\nAdding population growth to this model")
-stepr = filter(x->isa(x,Expr), findfunc(m.expr, :tick!))[1]
+stepr = findfunc(m.expr, :tick!)[1]
+#stepr = filter(x->isa(x,Expr), findfunc(m.expr, :tick!))[1]
 @show stepr
 push!(Func(), stepr, :(push!(sm.agents, :S)))
 println("------------------------")
 @show stepr;
+
+findfunc(m.expr, :tick!)
 
 println("\nRunning growth model")
 AgentModels = eval(m.expr)

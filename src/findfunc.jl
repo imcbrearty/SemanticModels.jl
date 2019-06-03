@@ -1,3 +1,4 @@
+using MacroTools
 """    findfunc(expr::Expr, name::Symbol)
 
 findfunc walks the AST of `expr` to find the definition of function called `name`.
@@ -5,48 +6,27 @@ findfunc walks the AST of `expr` to find the definition of function called `name
 This function returns a reference to the original expression so that you can modify it inplace
 and is intended to help users rewrite the definitions of functions for generating new models.
 """
-function findfunc(expr::Expr, name::Symbol)
-    try
-        expr.head
-    catch
-        return nothing
-    end
-
-    if expr.head == :module
-        return findfunc(expr.args[3], name)
-    end
-    if expr.head == :function
-        # normal function definition syntax ie. function f(x); return y end
-        if expr.args[1].args[1] == name
-            return expr
+function findfunc(expr::Expr, name::Symbol)  
+    out = []
+    MacroTools.postwalk(expr) do ex
+        if (MacroTools.isexpr(ex, :function, :(=)) && MacroTools.namify(ex) == name)
+            push!(out, ex)
         end
-        return findfunc(expr.args, name)
+        return ex
     end
-    if expr.head == :(=)
-        if isa(expr.args[1], Symbol)
-            return nothing
-        end
-
-        if expr.args[1].head == :call
-            # inline function definition ie. f(x) = y
-            if expr.args[1].args[1] == name
-                return expr
-            end
-            return findfunc(expr.args, name)
-        end
-    end
-    if expr.head == :block
-        return findfunc(expr.args, name)
-    end
-    return nothing
+    return out
 end
 
 function findfunc(expr::LineNumberNode, s::Symbol)
     return nothing
 end
 
-function findfunc(args::Vector{Any}, name::Symbol)
-    return filter(x->x!=nothing, [findfunc(a,name) for a in args])
+function findfunc(args::Array{Expr, 1}, name::Symbol)
+    out = []
+    for arg in args
+        out = vcat(out, findfunc(arg, name))
+    end
+    return out
 end
 
 
