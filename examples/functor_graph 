@@ -1,0 +1,11 @@
+digraph G {
+1 [ label="(Symbol("#g"), :Int64)",];
+2 [ label="Tuple",];
+3 [ label="(:Array, :Array)",];
+4 [ label="Array",];
+5 [ label="(:LsqFitResult,)",];
+6 [ label="NamedTuple",];
+1 -> 2 [ label="sample", ]
+3 -> 4 [ label="f", ]
+5 -> 6 [ label="describe", ]
+}
